@@ -7,9 +7,8 @@ import "./safeMath.sol";
 /// @notice You can use this contract to connect to decentralised social network, share your content to the world
 /// @dev Most of the features are implemented keeping note of security concerns
     contract Dwitter{
-        using SafeMath for uint256;
+        using SafeMath for uint;
         address payable public owner;//Owner is also a maintainer
-        address[] public maintainers;
         bool public stopped = false;
         
         struct User{
@@ -44,9 +43,6 @@ import "./safeMath.sol";
         uint public totalDweets=0;
         uint public totalComments=0;
         uint public totalUsers=0;
-
-        uint private totalMaintainers=0;
-        uint private totalReprotingActions=0;
         
         ///@dev NP means not present the default value for status 
         enum accountStatus{NP,Active,Banned,Deactivated}
@@ -70,14 +66,6 @@ import "./safeMath.sol";
         mapping(uint=>mapping(address=>bool)) private commentLikers; // Mapping to track who liked on which comment
         mapping(uint=>uint[]) private dweetComments; // Getting comments for a specific dweet
         
-        mapping(address=>bool) private maintainer;//Mapping to check weather a address is maintainer or not
-        mapping(address=>uint) private userRewards;
-        mapping(address=>uint) private maintainerStakeBalance;
-        mapping(address=>uint) private reportingStakeBalance;
-        mapping (address=>uint) private maintainerCorrectReportings;
-        mapping(address=>uint) private maintainerActionsCount;
-
-        mapping(address=>uint) private userTotalReports;//count of reports done till now on a user post's, includes final ones that are accepted by maintainers
 
 
         
@@ -89,7 +77,7 @@ import "./safeMath.sol";
         modifier onlyOwner{require(msg.sender==owner); _;}
         modifier onlyDweetAuthor(uint id){require(msg.sender==dweets[id].author); _;}
         modifier onlyCommentAuthor(uint id){require(msg.sender==comments[id].author); _;}
-        modifier onlyMaintainers(address user){require(maintainerStakeBalance[user]>0); _;}
+        modifier onlyMaintainers(address user){require(maintainers[user].stakeBalance>0); _;}
         modifier onlyAllowedUser(address user){require(users[user].status==accountStatus.Active); _;}
         modifier onlyActiveDweet(uint id){require(dweets[id].status==dweetStatus.Active); _;}
         modifier onlyActiveComment(uint id){require(comments[id].status==commentStatus.Active); _;}
@@ -107,7 +95,6 @@ import "./safeMath.sol";
         
         constructor() public{
             owner=msg.sender;
-            maintainer[msg.sender]=true;
         }
         
         
@@ -215,20 +202,67 @@ import "./safeMath.sol";
         24 hrs will be given to maintainers to Decide is reproting correct or not
         The winning majority and reporters will get rewards as per there staked amount
         */
-
-        fallback() external payable {
-            revert();
+        
+        struct maintainer{
+            uint stakeBalance;
+            uint totalActions;
+            uint correctActions;
+            uint wrongActions;
+            uint missedActions;
+            uint rewards;
         }
-        uint public maintainerStakePrice=0.12;
+        
+        uint public maintainerStakePrice=121567164097875008;
+        uint private totalMaintainers=0;
+        uint private totalRActions=0;
+        uint private totalReportsPending=0;
+        
+        
         modifier paidEnough() { require(msg.value >= maintainerStakePrice); _;}
+        
         modifier checkValue() {
             //refund them after pay for item (why it is before, _ checks for logic before func)
             _;
             uint amountToRefund = msg.value - maintainerStakePrice;
             msg.sender.transfer(amountToRefund);
         }
+        
+        event logMaintainerRegistered(address maintainer);
+        
+      
+        
 
-        function becomeMaintainer() payable onlyAllowedUser
+        
+        mapping(address=>maintainer) private maintainers;//Mapping to check weather a address is maintainer or not
+        mapping(address=>uint) private userRewards;
+        mapping(address=>uint) private reportingStakeBalance;
+    
+        mapping(address=>uint) private userTotalReports;//count of reports done till now on a user post's, includes final ones that are accepted by maintainers
+        
+        function becomeMaintainer() public payable onlyAllowedUser(msg.sender) paidEnough checkValue{
+            require(maintainers[msg.sender].stakeBalance==0);
+            maintainers[msg.sender].stakeBalance=msg.value;
+            totalMaintainers++;
+            emit logMaintainerRegistered(msg.sender);
+        }
+        
+        function calculateMaintainerStake() public view returns(uint){
+            uint price=totalRActions.div(totalReportsPending);
+            price=maintainerStakePrice.mul(price).mul(10).mul(totalMaintainers).div(totalUsers);
+            if(price<maintainerStakePrice){
+                return maintainerStakePrice;
+            }else{
+                return price;
+            }
+        }
+        
+        function reportDweet(uint _id) public payable onlyAllowedUser(msg.sender) onlyActiveDweet(_id){
+            
+        }
+          
+          
+        
+        
         
         
         
