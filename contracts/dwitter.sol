@@ -28,6 +28,7 @@ import "./safeMath.sol";
             string content;
             string imgHash;
             uint likeCount;
+            uint reportCount;
             dweetStatus status; // Dweet Reported and Banned or not
         }
         
@@ -37,6 +38,7 @@ import "./safeMath.sol";
             uint dweetId;
             string content;
             uint likeCount;
+            uint reportCount;
             commentStatus status; // Comment Reported and Banned or not
         }
         
@@ -58,6 +60,7 @@ import "./safeMath.sol";
         mapping(uint=>Dweet) private dweets;// mapping to get dweet from Id
         mapping(address=>uint[]) private userDweets; // Array to store dweets(Id) done by user
         mapping(uint=>mapping(address=>bool)) private dweetReporters; // Mapping to track who reported which dweet
+        mapping(uint=>address[]) private dweetReportersList;
         mapping(uint=>mapping(address=>bool)) private dweetLikers; // Mapping to track who liked which dweet
         
         mapping(uint=>Comment) private comments; //Mapping to get comment from comment Id
@@ -121,7 +124,7 @@ import "./safeMath.sol";
         }
         
         function createDweet(string memory _hashtag, string memory _content, string memory _imghash) public onlyAllowedUser(msg.sender) {
-            dweets[++totalDweets]=Dweet(totalDweets, msg.sender, _hashtag, _content, _imghash, 0, dweetStatus.Active);
+            dweets[++totalDweets]=Dweet(totalDweets, msg.sender, _hashtag, _content, _imghash, 0, 0, dweetStatus.Active);
             userDweets[msg.sender].push(totalDweets);
             emit logDweetCreated(msg.sender, users[msg.sender].id, totalDweets, _hashtag);
         }
@@ -154,7 +157,7 @@ import "./safeMath.sol";
         }
         
         function createComment(uint _dweetid, string memory _comment) public onlyAllowedUser(msg.sender)  onlyActiveDweet(_dweetid){
-            comments[++totalComments]=Comment(totalComments, msg.sender, _dweetid, _comment, 0, commentStatus.Active);
+            comments[++totalComments]=Comment(totalComments, msg.sender, _dweetid, _comment, 0, 0, commentStatus.Active);
             userComments[msg.sender].push(totalComments);
             dweetComments[_dweetid].push(totalComments);
         }
@@ -212,34 +215,30 @@ import "./safeMath.sol";
             uint rewards;
         }
         
-        uint public maintainerStakePrice=121567164097875008;
-        uint private totalMaintainers=0;
-        uint private totalRActions=0;
-        uint private totalReportsPending=0;
+        modifier paidEnoughforMaintainer() { require(msg.value >= calculateMaintainerStake()); _;}
         
-        
-        modifier paidEnough() { require(msg.value >= maintainerStakePrice); _;}
-        
-        modifier checkValue() {
-            //refund them after pay for item (why it is before, _ checks for logic before func)
+        modifier checkValueforMaintainer() {
             _;
-            uint amountToRefund = msg.value - maintainerStakePrice;
+            uint amountToRefund = msg.value - calculateMaintainerStake();
+            msg.sender.transfer(amountToRefund);
+        }
+        
+        modifier paidEnoughforReporter() { require(msg.value >= reportingstakePrice); _;}
+        
+        modifier checkValueforReporter() {
+            _;
+            uint amountToRefund = msg.value - reportingstakePrice;
             msg.sender.transfer(amountToRefund);
         }
         
         event logMaintainerRegistered(address maintainer);
+        event logNewPostReported(uint id, string hashtag);
         
-      
         
 
-        
-        mapping(address=>maintainer) private maintainers;//Mapping to check weather a address is maintainer or not
-        mapping(address=>uint) private userRewards;
-        mapping(address=>uint) private reportingStakeBalance;
     
-        mapping(address=>uint) private userTotalReports;//count of reports done till now on a user post's, includes final ones that are accepted by maintainers
         
-        function becomeMaintainer() public payable onlyAllowedUser(msg.sender) paidEnough checkValue{
+        function becomeMaintainer() public payable onlyAllowedUser(msg.sender) paidEnoughforMaintainer checkValueforMaintainer{
             require(maintainers[msg.sender].stakeBalance==0);
             maintainers[msg.sender].stakeBalance=msg.value;
             totalMaintainers++;
@@ -256,9 +255,37 @@ import "./safeMath.sol";
             }
         }
         
-        function reportDweet(uint _id) public payable onlyAllowedUser(msg.sender) onlyActiveDweet(_id){
-            
+        
+        uint public maintainerStakePrice=121567164097875008;//5000 Ruppee
+        uint public reportingstakePrice=23028896012875;//100 Ruppee
+        uint public reportingRewardPrice=23028896012875;//100 Ruppee
+        uint public ValidNoOfReportsForAction=10;
+        uint private totalMaintainers=0;
+        uint private totalRActions=0;//No of reports on which maintainers have taken action
+        uint private totalReportsPending=0;
+        mapping(address=>uint) private userTotalReports;//count of reports done till now on a user post's, includes final ones that are accepted by maintainers
+        mapping(address=>maintainer) private maintainers;//Mapping to check weather a address is maintainer or not
+        mapping(address=>uint) private userRewards;
+        mapping(address=>uint) private reportingStakeBalance;
+        
+        mapping(uint=>mapping(address=>bool)) public dweetMaintainerAction;
+        mapping(uint=>uint) private dweetMaintanerPositiveAction;
+        mapping(uint=>uint) private dweetMaintanerNegativeAction;
+        
+        uint[] private reportedDweetsForAction;
+        
+        function reportDweet(uint _id) public payable onlyAllowedUser(msg.sender) onlyActiveDweet(_id) paidEnoughforReporter checkValueforReporter {
+            require(dweets[_id].reportCount<ValidNoOfReportsForAction);
+            require(!dweetReporters[_id][msg.sender]);
+            dweetReporters[_id][msg.sender]=true;
+            dweetReportersList[_id].push(msg.sender);
+            if(++dweets[_id].reportCount>=ValidNoOfReportsForAction){
+                logNewPostReported(_id,dweets[_id].hashtag);
+                totalReportsPending++;
+                reportedDweetsForAction.push(_id);
+            }
         }
+        
           
           
         
