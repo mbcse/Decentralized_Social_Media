@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=no">
+    <meta http-equiv='x-ua-compatible' content='ie=edge'>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <!-- <link rel="stylesheet" href="node_modules/bootstrap-social/bootstrap-social.css"/> -->
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.min.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <link rel="stylesheet" href="/public/assets_admin/vendor/nucleo/css/nucleo.css" type="text/css">
+
+    <link rel="stylesheet" href="/public/assets_admin/css/dashboard.css?v=1.2.0" type="text/css">
+    <link rel="stylesheet" href="/public/assets_admin/css/style.css">
+    <title>Monitoring Page</title>
+
+    <style>
+    
+        #loader{
+          position: fixed;
+          width: 100%;
+          height: 100vh;
+          background: rgb(7, 7, 7)
+          url('https://media.giphy.com/media/WiIuC6fAOoXD2/giphy.gif')
+          no-repeat center center;	
+          z-index: 999;
+        }
+      
+        </style>
+      
+        <style>
+      /* body {
+          font-family: 'Varela Round', sans-serif;
+      } */
+      .modal-confirm {		
+          color: #434e65;
+          width: 525px;
+      }
+      .modal-confirm .modal-content {
+          padding: 20px;
+          font-size: 16px;
+          border-radius: 5px;
+          border: none;
+      }
+      .modal-confirm .modal-header {
+          background: #e85e6c;
+          border-bottom: none;   
+          position: relative;
+          text-align: center;
+          margin: -20px -20px 0;
+          border-radius: 5px 5px 0 0;
+          padding: 35px;
+      }
+      .modal-confirm h4 {
+          text-align: center;
+          font-size: 36px;
+          margin: 10px 0;
+      }
+      .modal-confirm .form-control, .modal-confirm .btn {
+          min-height: 40px;
+          border-radius: 3px; 
+      }
+      .modal-confirm .close {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          color: #fff;
+          text-shadow: none;
+          opacity: 0.5;
+      }
+      .modal-confirm .close:hover {
+          opacity: 0.8;
+      }
+      .modal-confirm .icon-box {
+          color: #fff;		
+          width: 95px;
+          height: 95px;
+          display: inline-block;
+          border-radius: 50%;
+          z-index: 9;
+          border: 5px solid #fff;
+          padding: 15px;
+          text-align: center;
+      }
+      .modal-confirm .icon-box i {
+          font-size: 58px;
+          margin: -2px 0 0 -2px;
+      }
+      .modal-confirm.modal-dialog {
+          margin-top: 80px;
+      }
+      .modal-confirm .btn, .modal-confirm .btn:active {
+          color: #fff;
+          border-radius: 4px;
+          background: #eeb711 !important;
+          text-decoration: none;
+          transition: all 0.4s;
+          line-height: normal;
+          border-radius: 30px;
+          margin-top: 10px;
+          padding: 6px 20px;
+          min-width: 150px;
+          border: none;
+      }
+      .modal-confirm .btn:hover, .modal-confirm .btn:focus {
+          background: #eda645 !important;
+          outline: none;
+      }
+      .trigger-btn {
+          display: inline-block;
+          margin: 100px auto;
+      }
+      </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader" class="text-white text-center">
+        <h2>Connecting You to Decentralised Social Network</h2>
+        <br>
+        <h4 id="msg"></h4>
+    </div>
+
+<!-- General Modal -->
+<div id="generalMsgModal" class="modal fade" style="z-index: 999999;">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header justify-content-center">
+				<div class="icon-box">
+					<i class="material-icons">&#xE5CD;</i>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body text-center">
+				<h4>Ooops!</h4>	
+				<p id="generalModalMessage">Error!!!!</p>
+				<!-- <button class="btn btn-success" data-dismiss="modal">Try Again</button> -->
+			</div>
+		</div>
+	</div>
+</div>   
+
+
+  <!-- Reproted Dweet Details Modal -->
+  <div id="reportedDweetModal" class="modal fade" style="z-index: 999999;">
+	<div class="modal-dialog modal-confirm" >
+		<div class="modal-content">
+			<div class="modal-header justify-content-center" style="background-color: #eda645; height: 150px;">
+				<div class="icon-box" >
+          <i class="material-icons">dynamic_feed</i>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body text-center">
+			
+        <form>
+          <div class="form-group ">
+            <label for="dweetTag" class="col-form-label">Tag:</label>
+            <span id="dweetTag" ></span>
+            <label for="dweetImage" class="col-form-label" >Image:</label>
+            <img src="" id="dweetImage" class="img-fluid" alt="">
+          </div>
+          <div class="form-group">
+            <label for="dweetContent" class="col-form-label">Content:</label>
+            <span id="dweetContent" ></span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <h4 id="reportDweetModalMsg"></h4>
+      </div>
+
+			</div>
+		</div>
+	</div>
+</div> 
+
+
+ <!-- Advertisements Details Modal -->
+ <div id="advertisementModal" class="modal fade" style="z-index: 999999;">
+	<div class="modal-dialog modal-confirm" >
+		<div class="modal-content">
+			<div class="modal-header justify-content-center" style="background-color: #6ced45; height: 150px;">
+				<div class="icon-box" >
+          <i class="material-icons">dynamic_feed</i>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body text-center">
+			
+        <form>
+          <div class="form-group ">
+            <label for="dweetTag" class="col-form-label">Link:</label>
+            <a href="" id="adLink"></a>
+            <label for="dweetImage" class="col-form-label" >Image:</label>
+            <img src="" id="adImage" class="img-fluid" alt="">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <h4 id="advertisementModalMsg"></h4>
+      </div>
+
+			</div>
+		</div>
+	</div>
+</div> 
+      
+<!--Top Navbar Fixed starts-->
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <a class="navbar-brand" href="#">Dwitter</a>
+
+        <!-- Navigation links -->
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item ">
+                <a class="nav-link" href="./index.html"><i class="octicon octicon-home nav-icon" aria-hidden="true"></i> Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="./admin.html"><i class="octicon octicon-bell nav-icon"></i> Monitoring</a>
+            </li>
+        </ul>
+        <!-- End Navigation links -->
+
+        <!-- Navigation bar search form-->
+        <form class="navbar-form" role="search">
+            <div class="input-group">
+                <input type="text" class="form-control input-search" placeholder="Search Dwitter" name="srch-term" id="srch-term">
+                <div class="input-group-btn">
+                    <button class="btn btn-default btn-search" type="submit"><i class="octicon octicon-search navbar-search-icon"></i></button>
+                </div>
+            </div>
+        </form>
+        <!-- End Navigation bar search form -->
+        <a class="btn btn-search-bar" data-toggle="modal" data-target="#tweetModal">Dweet</a>
+    </div>
+    <!--Top Navbar Fixed ends with closing nav tag below-->
+</nav>
+
+<div class="main-content" id="panel">
+    <!-- Header -->
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">Admin Panel</h6>
+                    </div>
+                </div>
+                <!-- Card stats -->
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Dweets</h5>
+                                        <span class="h2 font-weight-bold mb-0" id="totalDweets">0</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="ni ni-paper-diploma"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> </span>
+                                    <span class="text-nowrap"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total users</h5>
+                                        <span class="h2 font-weight-bold mb-0" id="totalUsers">2,356</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                            <i class="ni ni-user-run"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i></span>
+                                    <span class="text-nowrap"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Reports Pending</h5>
+                                        <span class="h2 font-weight-bold mb-0" id="totalReports">924</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-calendar-grid-58"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 40%</span>
+                                    <span class="text-nowrap">Since yesterday</span> -->
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Advertisement Request</h5>
+                                        <span class="h2 font-weight-bold mb-0" id="totalAdvertisements">650</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
+                                    <span class="text-nowrap">Since yesterday</span> -->
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Reported Dweets waiting for Action</h3>
+                            </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Dweet Id</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody id="reportsTbody">
+                            <!-- <tr>
+                                <td>
+                                   1
+                                </td>
+                                <td>
+                                   <button class="btn-warning">View</button>
+                                </td>
+                                <td>
+                                   <button class="btn-success ">Ban</button>
+                                   <button class="btn-danger">Free</button>
+                                </td>
+                            </tr> -->
+                          
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Advertisement Requests</h3>
+                            </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody id="advertisementsTbody">
+                            <!-- <tr>
+                               <th scope="row">
+                                    1
+                                </th>
+                                <td>
+                                    <button class="btn-warning viewad">View</button>
+                                 </td>
+                                 <td>
+                                    <button class="btn-success accept">Accept</button>
+                                    <button class="btn-danger reject">Reject</button>
+                                 </td>
+                            </tr> -->
+                           
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer Starts -->
+<footer class="footer">
+    <div class='container '>
+        <div class='row justify-content-center'>
+            <div class="col-auto">
+                <p>© Copyright 2020</p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Ends with below closing footer tag -->
+</footer>
+
+
+<script src='https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'></script>
+<script src="/public/assets_admin/vendor/js-cookie/js.cookie.js"></script>
+<script src="/public/assets_admin/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+<script src="public/assets_admin/js/argon.js?v=1.2.0"></script>
+
+<script src="./public/web3.min.js"></script>
+<script src="https://unpkg.com/ipfs-api@9.0.0/dist/index.js"
+integrity="sha384-5bXRcW9kyxxnSMbOoHzraqa7Z0PQWIao+cgeg327zit1hz5LZCEbIMx/LWKPReuB"
+crossorigin="anonymous"></script> 
+<script src="https://bundle.run/buffer@5.2.1"></script>
+<script src="./app2.js"></script>
+
+</body>
+</html>

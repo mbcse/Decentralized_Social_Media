@@ -1,0 +1,27 @@
+{
+  "name": "dwitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start":"npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbcse/Decentralized_Social_Media.git"
+  },
+  "author": "Mohit Bhat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mbcse/Decentralized_Social_Media/issues"
+  },
+  "homepage": "https://github.com/mbcse/Decentralized_Social_Media#readme",
+  "dependencies": {
+    "lite-server": "^2.6.1"
+  }
+}

@@ -1,0 +1,213 @@
+/* For Webpage */
+
+body {
+    background-color: #e6ecf0;
+}
+
+a {
+    color: #1DA1F2;
+}
+
+@media screen and (min-width: 1236px) {
+    .container {
+        width: 1190px;
+    }
+}
+
+.pointer:hover{
+    cursor: pointer;
+}
+
+/* Top Navbar elements styles */
+
+.navbar {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+.navbar-nav > li a {
+    color: #66757f;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.input-search {
+    font-size: 13px;
+}
+
+.input-search, .btn-search {
+    background-color: #f5f8fa;
+    border-radius: 21px;
+    border: 1px solid #e6ecf0;
+}
+.btn-search {
+    background-color: #fff;
+}
+
+.navbar-search-icon {
+    color: #66757f;
+}
+
+.nav-icon{
+    color: #4AB3F4;
+}
+
+.btn-circle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-image: url(https://pbs.twimg.com/profile_images/679974972278849537/bzzb-6H4_normal.jpg);
+}
+
+.btn-search-bar {
+    border-radius: 100px;
+    border: 1px solid #1da1f2;
+    color: #fff;
+    background-color: #4AB3F4;
+    border-color: transparent;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-search-bar:hover{
+    background-color: #1DA1F2;
+    border-color: #1DA1F2;
+    cursor:pointer;
+}
+
+.navbar-form {
+    margin-right: 15px;
+}
+
+.navbar-user-dropdown {
+    margin-right: 15px;
+}
+
+/* Left side panel elements */
+
+.l-side-panel-container{
+    padding: 15px 10px 15px 0;
+}
+
+.l-side-panel{
+    background-color: white;
+    border-radius: 3px;
+}
+
+/* Newsfeed elements */
+
+.news-feed-conatiner{
+    padding: 15px 10px;
+}
+
+.news-feed{
+    background-color: white;
+    border-radius: 3px;
+}
+
+/* tweet footer button */
+
+.profile-img{
+    height: 50px;
+    width: 50px;
+}
+
+.tweet-footer-btn {
+    margin-right: 30px;
+}
+
+.tweet-footer-btn i, .tweet-footer-btn span {
+    color: #657786;
+    font-size: 16px;
+}
+
+.tweet-footer-btn span {
+    margin-left: 8px;
+}
+
+.tweet-footer{
+    display: flex;
+}
+
+.right{
+    margin-left: auto;
+}
+
+/* Right side elements */
+
+.r-side-bar-container{
+    padding: 15px 10px;
+}
+
+.r-side-bar{
+    background-color: white;
+    border-radius: 3px;
+}
+
+.pic-col {
+    margin: 2px;
+    padding: 2px;
+}
+
+.right-col {
+    padding-left: 0;
+}
+.content-panel {
+    background-color: #fff;
+    line-height: 16px;
+    padding: 15px;
+}
+
+.content-panel h4 {
+    display: inline-block;
+}
+
+.content-panel small {
+    font-size: 66%;
+    margin-left: 6px;
+}
+
+.content-panel li {
+    min-height: 70px;
+}
+
+.btn-unfollow {
+    border-color: #fff;
+    color: #fff;
+    background-color: #1DA1F2;
+    border: 1px solid #fff;
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    box-shadow: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    min-width: 89px;
+}
+
+.btn-follow {
+    border-color: #1DA1F2;
+    color: #1DA1F2;
+    background-color: #fff;
+    border: 1px solid #1da1f2;
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    box-shadow: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    min-width: 89px;
+}
+
+.btn-follow:hover {
+    background-color: #E8F5FD;
+}
+
+/* Footer style elements */
+.footer{
+}

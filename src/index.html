@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title> Dwitter</title>
+  
+  
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.min.css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" href="data:image/png;base64,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" type="image/x-icon" sizes="128x128">
+  
+  <link rel="stylesheet" href="/public/assets_index/css/style.css">
+  <style>
+    
+  #loader{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: rgb(7, 7, 7)
+    url('https://media.giphy.com/media/WiIuC6fAOoXD2/giphy.gif')
+    no-repeat center center;	
+    z-index: 999;
+  }
+
+  </style>
+
+  <style>
+/* body {
+	font-family: 'Varela Round', sans-serif;
+} */
+.modal-confirm {		
+	color: #434e65;
+	width: 525px;
+}
+.modal-confirm .modal-content {
+	padding: 20px;
+	font-size: 16px;
+	border-radius: 5px;
+	border: none;
+}
+.modal-confirm .modal-header {
+	background: #e85e6c;
+	border-bottom: none;   
+	position: relative;
+	text-align: center;
+	margin: -20px -20px 0;
+	border-radius: 5px 5px 0 0;
+	padding: 35px;
+}
+.modal-confirm h4 {
+	text-align: center;
+	font-size: 36px;
+	margin: 10px 0;
+}
+.modal-confirm .form-control, .modal-confirm .btn {
+	min-height: 40px;
+	border-radius: 3px; 
+}
+.modal-confirm .close {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	color: #fff;
+	text-shadow: none;
+	opacity: 0.5;
+}
+.modal-confirm .close:hover {
+	opacity: 0.8;
+}
+.modal-confirm .icon-box {
+	color: #fff;		
+	width: 95px;
+	height: 95px;
+	display: inline-block;
+	border-radius: 50%;
+	z-index: 9;
+	border: 5px solid #fff;
+	padding: 15px;
+	text-align: center;
+}
+.modal-confirm .icon-box i {
+	font-size: 58px;
+	margin: -2px 0 0 -2px;
+}
+.modal-confirm.modal-dialog {
+	margin-top: 80px;
+}
+.modal-confirm .btn, .modal-confirm .btn:active {
+	color: #fff;
+	border-radius: 4px;
+	background: #eeb711 !important;
+	text-decoration: none;
+	transition: all 0.4s;
+	line-height: normal;
+	border-radius: 30px;
+	margin-top: 10px;
+	padding: 6px 20px;
+	min-width: 150px;
+	border: none;
+}
+.modal-confirm .btn:hover, .modal-confirm .btn:focus {
+	background: #eda645 !important;
+	outline: none;
+}
+.trigger-btn {
+	display: inline-block;
+	margin: 100px auto;
+}
+</style>
+
+<style>
+  .pb-cmnt-container {
+      font-family: Lato;
+      margin-top: 100px;
+  }
+
+  .pb-cmnt-textarea {
+      resize: none;
+      padding: 20px;
+      height: 130px;
+      width: 100%;
+      border: 1px solid #F2F2F2;
+  }
+</style>
+
+
+<style>
+
+
+.card-white  .card-heading {
+  color: #333;
+  background-color: #fff;
+  border-color: #ddd;
+   border: 1px solid #dddddd;
+}
+.card-white  .card-footer {
+  background-color: #fff;
+  border-color: #ddd;
+}
+.card-white .h5 {
+    font-size:14px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.card-white .time {
+    font-size:12px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.post .post-heading {
+  height: 95px;
+  padding: 20px 15px;
+}
+.post .post-heading .avatar {
+  width: 60px;
+  height: 60px;
+  display: block;
+  margin-right: 15px;
+}
+.post .post-heading .meta .title {
+  margin-bottom: 0;
+}
+.post .post-heading .meta .title a {
+  color: black;
+}
+.post .post-heading .meta .title a:hover {
+  color: #aaaaaa;
+}
+.post .post-heading .meta .time {
+  margin-top: 8px;
+  color: #999;
+}
+.post .post-image .image {
+  width: 100%;
+  height: auto;
+}
+.post .post-description {
+  padding: 15px;
+}
+.post .post-description p {
+  font-size: 14px;
+}
+.post .post-description .stats {
+  margin-top: 20px;
+}
+.post .post-description .stats .stat-item {
+  display: inline-block;
+  margin-right: 15px;
+}
+.post .post-description .stats .stat-item .icon {
+  margin-right: 8px;
+}
+.post .post-footer {
+  border-top: 1px solid #ddd;
+  padding: 15px;
+}
+.post .post-footer .input-group-addon a {
+  color: #454545;
+}
+.post .post-footer .comments-list {
+  padding: 0;
+  margin-top: 20px;
+  list-style-type: none;
+}
+.post .post-footer .comments-list .comment {
+  display: block;
+  width: 100%;
+  margin: 20px 0;
+}
+.post .post-footer .comments-list .comment .avatar {
+  width: 35px;
+  height: 35px;
+}
+.post .post-footer .comments-list .comment .comment-heading {
+  display: block;
+  width: 100%;
+}
+.post .post-footer .comments-list .comment .comment-heading .user {
+  font-size: 14px;
+  font-weight: bold;
+  display: inline;
+  margin-top: 0;
+  margin-right: 10px;
+}
+.post .post-footer .comments-list .comment .comment-heading .time {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 0;
+  display: inline;
+}
+.post .post-footer .comments-list .comment .comment-body {
+  margin-left: 50px;
+}
+.post .post-footer .comments-list .comment > .comments-list {
+  margin-left: 50px;
+}
+</style>
+  
+</head>
+
+<body>
+
+  <div id="loader" class="text-white text-center">
+    <h2>Connecting You to Decentralised Social Network</h2>
+    <br>
+    <h4 id="msg"></h4>
+  </div>
+
+  <!-- Register Modal -->
+<div class="modal" id="registerModal" style="z-index: 99999;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Register Here to access Website</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Register body -->
+      <div class="modal-body">
+        <form action="" >
+          <div class="form-group">
+            <label for="ethaddress">Ethereum Address Detected</label>
+            <span id="ethAddressForRegisterModal"></span>
+          </div>
+          <div class="form-group">
+            <label for="username">username</label>
+            <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
+            <small id="usernameHelp" class="form-text text-muted"></small>
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Name">
+          </div>
+          <div class="form-group">
+            <label for="profileImg">Profile Image</label>
+            <input type="file" class="form-control" id="profileImg" >
+          </div>
+          <div class="form-group">
+            <label for="coverImg">Cover Image</label>
+            <input type="file" class="form-control" id="coverImg" >
+          </div>
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <input type="text" class="form-control" id="bio" placeholder="Bio" >
+          </div>
+        
+          <button type="button" id="registerBtn" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="closeRegisterModal" data-dismiss="modal">Close</button>
+      </div> -->
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+  <!-- General Modal -->
+<div id="generalMsgModal" class="modal fade" style="z-index: 999999;">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header justify-content-center">
+				<div class="icon-box">
+					<i class="material-icons">&#xE5CD;</i>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body text-center">
+				<h4>Ooops!</h4>	
+				<p id="generalModalMessage">Error!!!!</p>
+				<!-- <button class="btn btn-success" data-dismiss="modal">Try Again</button> -->
+			</div>
+		</div>
+	</div>
+</div>   
+
+  <!-- Dweet Modal -->
+<div id="dweetModal" class="modal fade" style="z-index: 999999;">
+	<div class="modal-dialog modal-confirm" >
+		<div class="modal-content">
+			<div class="modal-header justify-content-center" style="background-color: #eda645; height: 100px;">
+				<div class="icon-box" >
+          <i class="material-icons">create</i>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body text-center">
+			
+        <form>
+          <div class="form-group ">
+            <label for="dweetTag" class="col-form-label">Tag:</label>
+            <input type="text" class="form-control" id="dweetTag" >
+            <label for="dweetImage" class="col-form-label" >Image:</label>
+            <input type="file" class="form-control" id="dweetImage">
+          </div>
+          <div class="form-group">
+            <label for="dweetContent" class="col-form-label"></label>
+            <textarea class="form-control" id="dweetContent" style="height: 200px;"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <h4 id="dweetModalMsg"></h4>
+        <button type="button" class="btn btn-primary" id="dweetSubmit">Dweet</button>
+      </div>
+
+			</div>
+		</div>
+	</div>
+</div>   
+
+
+
+  <!-- Comments Modal -->
+  <div id="commentModal" class="modal fade" style="z-index: 999999;">
+    <div class="modal-dialog modal-confirm" >
+      <div class="modal-content">
+        <div class="modal-header justify-content-center" style="background-color:#e85e6c; height: 100px;">
+          <div class="icon-box" >
+            <i class="material-icons">comment</i>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body" style="width: 700px;">
+
+          <div class="container" id="commentContainer" style="overflow-y: scroll; height:300px">
+
+
+            <div class="row" id="commentDiv" >
+                <div class="col-8">
+                    <div class="card card-white post">
+                        <div class="post-heading">
+                            <div class="float-left image">
+                                <img src="http://bootdey.com/img/Content/user_1.jpg" class="img-circle avatar" alt="user profile image">
+                            </div>
+                            <div class="float-left meta">
+                                <div class="title h5">
+                                    <a href="#"><b>Ryan Haywood</b></a>
+                                    
+                                </div>
+                                <h6 class="text-muted time">1 minute ago</h6>
+                            </div>
+                        </div> 
+                        <div class="post-description"> 
+                            <p>Bootdey is a gallery of free snippets resources templates and utilities for bootstrap css hmtl js framework. Codes for developers and web designers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+          </div>
+         
+
+
+                <div class="container pb-cmnt-container">
+                  <div class="row">
+                      <div class="col-md-8 ">
+                          <div class="card card-info">
+                              <div class="card-block">
+                                  <textarea placeholder="Write your comment here!" id="commentArea" class="pb-cmnt-textarea"></textarea>
+                                  <form class="form-inline">
+                              
+                                      <button class="btn btn-primary float-xs-right" id="commentBtn" type="button">Share</button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+               </div>
+      </div>
+        <div class="modal-footer">
+
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary" id="dweetSubmit">Dweet</button> -->
+        </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>   
+
+
+  <!-- Advertisement Modal -->
+  <div id="advertisementModal" class="modal fade" style="z-index: 999999;">
+    <div class="modal-dialog modal-confirm" >
+      <div class="modal-content">
+        <div class="modal-header justify-content-center" style="background-color:aqua; height: 100px;">
+          <div class="icon-box" >
+            <i class="material-icons">create</i>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body text-center">
+        
+          <form>
+            <div class="form-group ">
+              <label for="adImage" class="col-form-label" >Image:</label>
+              <input type="file" class="form-control" id="adImage">
+            </div>
+            <div class="form-group">
+              <label for="adLink" class="col-form-label"></label>
+              <input type="url" class="form-control" id="adLink" >
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <h4 id="adModalMsg"></h4>
+          <button type="button" class="btn btn-primary" id="adSubmit">Submit</button>
+          Note: Payment of Rs.5000 in ether will be charged
+        </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>     
+
+
+<nav class="navbar navbar-toggleable-md fixed-top">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse container">
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><i class="octicon octicon-home" aria-hidden="true"></i> Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="admin.html"><i class="octicon octicon-zap"></i>Maintain</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="octicon octicon-bell"></i> Notifications</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="octicon octicon-mail"></i> Messages</a>
+      </li>
+    </ul>
+
+    <img src="data:image/png;base64,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" height="25" width="25" style="margin: auto;">
+  
+    <form class="navbar-form" role="search">
+      <div class="input-group">
+        <input type="text" class="form-control input-search" placeholder="Search Twitter " name="srch-term" id="srch-term">
+        <div class="input-group-btn">
+          <button class="btn btn-default btn-search" type="submit"><i class="octicon octicon-search navbar-search-icon"></i></button>
+        </div>
+      </div>
+    </form>
+   
+    <div>
+    <img src="https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png" alt="" class="btn-circle">
+    </div>
+  
+    <button class="btn btn-search-bar" id="dweetBtn">Dweet</button>
+  </div>
+</nav>
+
+<div class="main-container">
+
+  <div class="row profile-background" id="userCoverImage">
+    <div class="container">
+	 
+      <div class="avatar-container">
+        <div class="avatar" id="userProfileImage">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar profile-stats">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+
+        </div>
+        <div class="col-6">
+          <ul>
+            <li class="profile-stats-item-active">
+              <a>
+                <span class="profile-stats-item profile-stats-item-label">Dweets</span>
+                <span class="profile-stats-item profile-stats-item-number" id="userTotalDweets">0</span>
+              </a>
+            </li>
+            <li>
+              <a>
+                <span class="profile-stats-item profile-stats-item-label">Following</span>
+                <span class="profile-stats-item profile-stats-item-number">-</span>
+              </a>
+            </li>
+            <li>
+              <a>
+                <span class="profile-stats-item profile-stats-item-label">Followers</span>
+                <span class="profile-stats-item profile-stats-item-number">-</span>
+              </a>
+            </li>
+            <li>
+              <a>
+                <span class="profile-stats-item profile-stats-item-label">Likes</span>
+                <span class="profile-stats-item profile-stats-item-number">-</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col">
+
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container main-content">
+    <div class="row">
+      <div class="col profile-col">
+        <div class="profile-header">
+        
+          <h3 class="profile-fullname"><a id="fullname"><a><img src="/public/assets_index/img/tick.png" height="20" width="20"></h3>
+          <h2 class="profile-element"><a id="username"></a></h2>
+          <h2 class="profile-element"><a id="account" style="font-size:x-small;"></a></h2>
+
+          <!-- <h2 class="profile-element"><i class="octicon octicon-calendar"></i>Joined June 2009</h2>
+          <button class="btn btn-search-bar tweet-to-btn">Tweet to Elon Musk</button> -->
+          <!-- <a class="profile-element profile-website" hrerf=""><i class="octicon octicon-file-media"></i>5 Dweets</a> -->
+          <div class="pic-grid">
+            <h5 id="userBio"></h5>
+            <!-- <div class="row">
+              <div class="col pic-col"><img src="https://pbs.twimg.com/media/D93sNcZXYAEVUaT.jpg:thumb" height="73px" class=""></div>
+              <div class="col pic-col"><img src="https://pbs.twimg.com/media/D928_MMXoAE1hS1.jpg:thumb" height="73px" class=""></div>
+              <div class="col pic-col"><img src="https://pbs.twimg.com/media/D9zI9g9XsAIBa-n.jpg:thumb" height="73px" class=""></div>
+            </div>
+   
+            <div class="row">
+              <div class="col pic-col"><img src="https://pbs.twimg.com/media/D9xpZe3VUAAo-DK.jpg:thumb" height="73px" class=""></div>
+              <div class="col pic-col"><img src="https://pbs.twimg.com/media/D9nXOHWUYAABc6a.jpg:thumb" height="73px" class=""></div>
+              <div class="col pic-col"><img src="https://pbs.twimg.com/media/D9hubPAXoAE9oJE.jpg:thumb" height="73px" class=""></div>
+            </div> -->
+     
+          </div>
+ 
+        </div>
+      </div>
+
+      <div class="col-6">
+        <ol class="tweet-list" id="dweet-list">
+            <li class="tweet-card twitter-img">
+                <div class="tweet-content">
+                  <div class="tweet-header">
+                  <div class="heading">
+                      <h5 style="color: black;">Dweets  </h5>
+                      <h5>Dweets&replies  </h5>
+                      <h5>Media  </h5>
+                  </div>
+                      </div>
+                      </div>
+                      </li>
+
+
+          <li class="tweet-card" id="dweet">
+            <div class="tweet-content">
+              <div class="tweet-header">
+                <span class="fullname">
+                  <strong> </strong>
+                </span>
+                <span class="username"></span>
+                <span class="tweet-time"></span>
+              </div>
+              <a>
+                <img class="tweet-card-avatar" src="" alt="">
+              </a>
+              <div class="tweet-text">
+                <img src="" alt="" height="400" width="450" class="img-fluid" style="border-radius: 28px;">
+                <p class="" lang="es" data-aria-label-part="0"> <a href="" class="twitter-hashtag"><s</s><b></b></a>  <a href="" class="twitter-hashtag"><s></s><b></b></a><br><br> <a href="#"></a><a href="#"></a><br><br> <a href="#"></a> <a href="#"></a>            <a href="" class="twitter-hashtag"><s></s><b></b></a> <a href="" class="twitter-hashtag"><s></s><b></b></a>
+                  <a href="" class="twitter-hashtag" dir="ltr"></a>
+                </p>
+              </div>
+              <div class="tweet-footer">
+                <a class="tweet-footer-btn comment">
+                  <i class="octicon octicon-comment" aria-hidden="true"></i><span> </span>
+                </a>
+                <!-- <a class="tweet-footer-btn">
+                  <i class="octicon octicon-sync" aria-hidden="true"></i><span> </span>
+                </a> -->
+                <a class="tweet-footer-btn like">
+                  <i class="octicon octicon-heart" aria-hidden="true"></i><span> </span>
+                </a>
+                <a class="tweet-footer-btn report">
+                  <i class="octicon octicon-info" aria-hidden="true"></i><span></span>
+                </a>
+              </div>
+            </div>
+          </li>
+
+     
+        </ol>
+ 
+      </div>
+      <div class="col right-col">
+        <div class="content-panel">
+          <div class="panel-header">
+            <h5>Want to Advertise?</h5><small>
+          </div>
+
+          <div class="panel-content">
+
+            <button type="button" id="adBtn" class="btn-primary">Click Here</button>
+            <!-- <ol class="tweet-list">
+              <li class="tweet-card">
+                <div class="tweet-content">
+                  <img class="tweet-card-avatar" src="https://pbs.twimg.com/profile_images/822547732376207360/5g0FC8XX_bigger.jpg" alt="">
+                  <div class="tweet-header">
+                    <span class="fullname">
+                  <strong>Barack Obama <img src="/public/assets_index/img/tick.png" height="20" width="20"></strong>
+                </span>
+                    <span class="username">@BarackObama</span>
+                  </div>
+
+                  <button class="btn btn-follow">Follow</button>
+                </div>
+              </li>
+              <li class="tweet-card">
+                <div class="tweet-content">
+                  <img class="tweet-card-avatar" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_bigger.jpg" alt="">
+                  <div class="tweet-header">
+                    <span class="fullname">
+                  <strong>Bill Gates <img src="/public/assets_index/img/tick.png" height="20" width="20"></strong>
+                </span>
+                    <span class="username">@BillGates</span>
+                  </div>
+
+                  <button class="btn btn-follow">Follow</button>
+                </div>
+              </li>
+              <li class="tweet-card">
+                <div class="tweet-content">
+                  <img class="tweet-card-avatar" src="https://pbs.twimg.com/profile_images/876792863459352577/SBLRu4VV_bigger.jpg" alt="">
+                  <div class="tweet-header">
+                    <span class="fullname">
+                  <strong>Richard Branson<img src="/public/assets_index/img/tick.png" height="20" width="20"></strong>
+                </span>
+                    <span class="username">@richardbranson</span>
+                  </div>
+
+                  <button class="btn btn-follow">Follow</button>
+                </div>
+              </li>
+            </ol> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src='https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'></script>
+  <script src="./public/web3.min.js"></script>
+  <script src="https://unpkg.com/ipfs-api@9.0.0/dist/index.js"
+  integrity="sha384-5bXRcW9kyxxnSMbOoHzraqa7Z0PQWIao+cgeg327zit1hz5LZCEbIMx/LWKPReuB"
+  crossorigin="anonymous"></script> 
+  <script src="https://bundle.run/buffer@5.2.1"></script>
+  <script src="./app.js"></script>
+  
+</body>
+</html>
