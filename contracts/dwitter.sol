@@ -134,7 +134,7 @@ pragma solidity >=0.5.10;
         
         constructor() public {
             owner=msg.sender;
-            isMaintainer[owner]=true;
+            addMaintainer(msg.sender);
         }
         
 /*
@@ -280,14 +280,20 @@ pragma solidity >=0.5.10;
       uint private noOfReportsRequired=1;
       uint public reportingstakePrice=1936458778290500;
       uint public reportingRewardPrice=3872917556581000;
+      
       mapping(address=>bool) public isMaintainer;
       mapping(address=>uint) private maintainerId;
       mapping(uint=>mapping(address=>bool)) private dweetReporters; // Mapping to track who reported which dweet
-      mapping(address=>uint[]) public userReportList;
-      enum reportAction{NP, Banned, Free}
+     
       mapping(uint=>reportAction) private actionOnDweet;
+      mapping(address=>uint[]) public userReportList;
       mapping(address=>uint) private userRewards;
       mapping(address=>uint) private fakeReportingReward;
+      
+      enum userdweetReportingStatus{NP, Reported, Claimed}
+      mapping(uint=>mapping(address=>userdweetReportingStatus)) private claimedReward;//To check wether user has claiimed reward for a particular reporting
+      
+      enum reportAction{NP, Banned, Free}
       
       function addMaintainer(address _user) public onlyOwner {
           isMaintainer[_user]=true;
@@ -313,12 +319,14 @@ pragma solidity >=0.5.10;
       
       event logDweetReported(uint id, string hashtag);
       event logDweetBanned(uint id, string hashtag, uint maintainer); // To track how many dweets were banned to specific hashtag
+      event logDweetFreed(uint id, string hashtag, uint maintainer); // To track how many dweets were banned to specific hashtag
 
       function reportDweet(uint _dweetId) public payable onlyActiveDweet(_dweetId) onlyAllowedUser(msg.sender) paidEnoughforReporter checkValueforReporter{
           require(dweets[_dweetId].reportCount<=noOfReportsRequired);
           require(!dweetReporters[_dweetId][msg.sender]);
           dweetReporters[_dweetId][msg.sender]=true;//Reentracy attack Prevented
           userReportList[msg.sender].push(_dweetId);
+          claimedReward[_dweetId][msg.sender]=userdweetReportingStatus.Reported;
           uint reports=++dweets[_dweetId].reportCount;
           if(reports==noOfReportsRequired){
               dweetsReportedList.push(_dweetId);
@@ -334,27 +342,40 @@ pragma solidity >=0.5.10;
           }else{
               actionOnDweet[_dweetId]=reportAction.Free;
               fakeReportingReward[dweets[_dweetId].author]+=reportingstakePrice.mul(noOfReportsRequired);
+              emit logDweetFreed(_dweetId, dweets[_dweetId].hashtag, maintainerId[msg.sender]);
           }
       }
       
       
-      function claimReportingReward() public onlyAllowedUser(msg.sender){
-          require(userReportList[msg.sender].length>0);
-          for(uint i=userReportList[msg.sender].length-1;i>=0;i--){
-              if(actionOnDweet[userReportList[msg.sender][i]]==reportAction.NP){
-                  revert();
-              }
-              if(actionOnDweet[userReportList[msg.sender][i]]==reportAction.Banned){
-                  userRewards[msg.sender]+=reportingRewardPrice;
-                  delete(userReportList[msg.sender][i]);
-              }
-              if(actionOnDweet[userReportList[msg.sender][i]]==reportAction.Free){
-                  delete(userReportList[msg.sender][i]);
-              }
-          }
-          
-          delete(userReportList[msg.sender]);
-          msg.sender.transfer(userRewards[msg.sender]);
+      function claimReportingReward(uint _id) public onlyAllowedUser(msg.sender){
+        require(claimedReward[_id][msg.sender]==userdweetReportingStatus.Reported);
+        require(userReportList[msg.sender].length>0);
+        require(actionOnDweet[_id]==reportAction.Banned);
+        claimedReward[_id][msg.sender]=userdweetReportingStatus.Claimed;//Reentracy Prevented
+        msg.sender.transfer(reportingRewardPrice);
+      }
+      
+      function claimSuitReward()public onlyAllowedUser(msg.sender){
+          require(fakeReportingReward[msg.sender]>0);
+          uint amount=fakeReportingReward[msg.sender];
+          fakeReportingReward[msg.sender]=0;//Attack Prevented
+          msg.sender.transfer(amount);
+      }
+      
+      function myReportings() public view onlyAllowedUser(msg.sender) returns(uint[] memory list){
+          return userReportList[msg.sender];
+      }
+      
+      function myReportingReward() public view onlyAllowedUser(msg.sender) returns(uint balance){
+          return userRewards[msg.sender];
+      }
+      
+      function reportingClaimStatus(uint _id) public view onlyAllowedUser(msg.sender) returns(userdweetReportingStatus status){
+          return claimedReward[_id][msg.sender];
+      }
+      
+      function fakeReportingSuitReward() public view onlyAllowedUser(msg.sender) returns(uint balance){
+         return fakeReportingReward[msg.sender];
       }
       
       function getReportedDweets() public view onlyAllowedUser(msg.sender) returns(uint[] memory list){
@@ -364,6 +385,7 @@ pragma solidity >=0.5.10;
       function getReportedDweetStatus(uint _dweetId) public view onlyAllowedUser(msg.sender) returns(reportAction status){
           return(actionOnDweet[_dweetId]);
       }
+     
       
       
 /*
@@ -402,15 +424,20 @@ pragma solidity >=0.5.10;
           advertiserAdvertisementsList[msg.sender].push(id);
       }
       
+      event logAdvertisementApproved(uint id, uint maintainer);
+      event logAdvertisementRejected(uint id, uint maintainer);
+      
       function advertisementApproval(uint _id, bool _decision) public onlyMaintainer{
           require(advertisements[_id].status==AdApprovalStatus.NP);
           if(_decision){
               advertisements[_id].status=AdApprovalStatus.Approved;
               advertisements[_id].expiry=block.timestamp+ 1 days;
+              emit logAdvertisementApproved(_id,maintainerId[msg.sender]);
           }else{
               advertisements[_id].status=AdApprovalStatus.Rejected;
               uint refund=advertisementCost.mul(8).div(100);
               msg.sender.transfer(refund);
+              emit logAdvertisementRejected(_id,maintainerId[msg.sender]);
           }
       }
       
@@ -432,6 +459,11 @@ pragma solidity >=0.5.10;
       
       function getBalance()public view onlyOwner() returns(uint balance){
           return address(this).balance;
+      }
+      
+      function transferContractBalance(uint _amount)public onlyOwner{
+          require(_amount<=address(this).balance);
+          msg.sender.transfer(_amount);
       }
       
         

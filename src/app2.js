@@ -57,6 +57,44 @@ App={
               },
               {
                 "indexed": false,
+                "internalType": "uint256",
+                "name": "maintainer",
+                "type": "uint256"
+              }
+            ],
+            "name": "logAdvertisementApproved",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "maintainer",
+                "type": "uint256"
+              }
+            ],
+            "name": "logAdvertisementRejected",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
                 "internalType": "string",
                 "name": "hashtag",
                 "type": "string"
@@ -119,6 +157,31 @@ App={
               }
             ],
             "name": "logDweetDeleted",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashtag",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "maintainer",
+                "type": "uint256"
+              }
+            ],
+            "name": "logDweetFreed",
             "type": "event"
           },
           {
@@ -260,8 +323,21 @@ App={
             "type": "function"
           },
           {
-            "inputs": [],
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
             "name": "claimReportingReward",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "claimSuitReward",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -377,6 +453,19 @@ App={
             "name": "editDweet",
             "outputs": [],
             "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "fakeReportingSuitReward",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
             "type": "function"
           },
           {
@@ -790,6 +879,32 @@ App={
           },
           {
             "inputs": [],
+            "name": "myReportingReward",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "myReportings",
+            "outputs": [
+              {
+                "internalType": "uint256[]",
+                "name": "list",
+                "type": "uint256[]"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
             "name": "owner",
             "outputs": [
               {
@@ -845,6 +960,25 @@ App={
             "name": "reportDweet",
             "outputs": [],
             "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
+            "name": "reportingClaimStatus",
+            "outputs": [
+              {
+                "internalType": "enum Dwitter.userdweetReportingStatus",
+                "name": "status",
+                "type": "uint8"
+              }
+            ],
+            "stateMutability": "view",
             "type": "function"
           },
           {
@@ -1003,6 +1137,19 @@ App={
           {
             "inputs": [
               {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+              }
+            ],
+            "name": "transferContractBalance",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
                 "internalType": "address",
                 "name": "",
                 "type": "address"
@@ -1058,7 +1205,7 @@ App={
           }
         ];
     
-        let address = "0xC4894C53339837c9EED10DDB36d0351a295ca8Fe";
+        let address = "0x8572bbA7f5EDdb8D70565D8B1DB0Dd8cFDc36BFC";
     
         App.contracts.dwitter = new web3.eth.Contract(abi, address);
         console.log(App.contracts.dwitter);
@@ -1232,6 +1379,50 @@ App={
         }
   },
 
+  maintainerSettings:async()=>{
+    let owner=await App.contracts.dwitter.methods.owner().call({from:App.account});
+    if(App.account.toLowerCase()==owner.toLowerCase()){
+      $("#maintainerModal").modal("show");
+      $("#addMaintainerBtn").on("click",async()=>{
+        let address=$("#maintainerAddress").val();
+        await  App.contracts.dwitter.methods.addMaintainer(address).send({from:App.account});
+        $("#MaintainerModalMsg").text("Success, Maintainer Added Successfully")
+      });
+
+      $("#removeMaintainerBtn").on("click",async()=>{
+        let address=$("#maintainerAddress").val();
+        await  App.contracts.dwitter.methods.revokeMaintainer(address).send({from:App.account});
+        $("#MaintainerModalMsg").text("Success, Maintainer Removed Successfully")
+      });
+      
+    }else{
+      $("#generalMsgModal").modal("show");
+      $("#generalModalMessage").text("Access Denied!!! You are not Owner of this Platform");
+    }
+  },
+
+  withdrawContractFunds:async()=>{
+    let owner=await App.contracts.dwitter.methods.owner().call({from:App.account});
+    console.log(owner);
+    console.log(App.account);
+    if(App.account.toLowerCase()==owner.toLowerCase()){
+      $("#contractBalanceModal").modal("show");
+      let balance=await App.contracts.dwitter.methods.getBalance().call({from:App.account});
+      $("#contractBalance").text(balance);
+  
+      $("#WithdrawContractBalance").on("click", async()=>{
+         let amount=$("#fundsWithdrawAmount").val();
+         await App.contracts.dwitter.methods.transferContractBalance(amount).send({from:App.account});
+        let balance=await App.contracts.dwitter.methods.getBalance().call({from:App.account});
+        $("#contractBalance").text(balance);
+      });
+      
+    }else{
+      $("#generalMsgModal").modal("show");
+      $("#generalModalMessage").text("Access Denied!!! You are not Owner of this Platform");
+    }
+  }
+
  
 
  
@@ -1242,5 +1433,8 @@ App={
 $(() => {
   $(window).on("load",() => {
     App.load();
+    $("#fundsBtn").on("click",App.withdrawContractFunds);
+    $("#maintainerBtn").on("click",App.maintainerSettings);
+
   });
 });

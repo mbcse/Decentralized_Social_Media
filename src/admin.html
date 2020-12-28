@@ -141,6 +141,49 @@
 	</div>
 </div>   
 
+  <!-- Contract Balance Modal -->
+  <div id="contractBalanceModal" class="modal fade" style="z-index: 999999;">
+    <div class="modal-dialog modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <div class="icon-box">
+            <i class="material-icons">account_balance</i>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body text-center">
+          <h4>Contract Balance </h4>	
+          <p id="contractBalance"></p>
+          <input type="text" id="fundsWithdrawAmount">
+          <button type="button" class="btn btn-success" id="WithdrawContractBalance">Withdraw</button> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Maintainer Modal -->
+    <div id="maintainerModal" class="modal fade" style="z-index: 999999;">
+        <div class="modal-dialog modal-confirm">
+          <div class="modal-content">
+            <div class="modal-header justify-content-center">
+              <div class="icon-box">
+                <i class="material-icons">add_task</i>
+              </div>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4>Add-Remove Maintainer</h4>
+            </div>
+            <div class="modal-body text-center">
+
+            <label for="maintainerAddress" class="col-form-label">Address:</label>
+            <input type="text" class="form-control" id="maintainerAddress" >	
+            <button type="button" class="btn btn-success" id="removeMaintainerBtn">Remove Maintainer</button> 
+              <button type="button" class="btn btn-success" id="addMaintainerBtn">Add Maintainer</button> 
+              <h6 id="maintainerModalMsg"></h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
   <!-- Reproted Dweet Details Modal -->
   <div id="reportedDweetModal" class="modal fade" style="z-index: 999999;">
@@ -227,6 +270,12 @@
             <li class="nav-item">
                 <a class="nav-link active" href="./admin.html"><i class="octicon octicon-bell nav-icon"></i> Monitoring</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#" id="fundsBtn"><i class="octicon octicon-gift nav-icon"></i>Funds</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#" id="maintainerBtn"><i class="octicon octicon-tools nav-icon"></i>Add-Remove Maintainer</a>
+            </li>
         </ul>
         <!-- End Navigation links -->
 
@@ -308,7 +357,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Reports Pending</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Dweet Reports Request</h5>
                                         <span class="h2 font-weight-bold mb-0" id="totalReports">924</span>
                                     </div>
                                     <div class="col-auto">

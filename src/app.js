@@ -57,6 +57,44 @@ App={
               },
               {
                 "indexed": false,
+                "internalType": "uint256",
+                "name": "maintainer",
+                "type": "uint256"
+              }
+            ],
+            "name": "logAdvertisementApproved",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "maintainer",
+                "type": "uint256"
+              }
+            ],
+            "name": "logAdvertisementRejected",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
                 "internalType": "string",
                 "name": "hashtag",
                 "type": "string"
@@ -119,6 +157,31 @@ App={
               }
             ],
             "name": "logDweetDeleted",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashtag",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "maintainer",
+                "type": "uint256"
+              }
+            ],
+            "name": "logDweetFreed",
             "type": "event"
           },
           {
@@ -260,8 +323,21 @@ App={
             "type": "function"
           },
           {
-            "inputs": [],
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
             "name": "claimReportingReward",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "claimSuitReward",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -377,6 +453,19 @@ App={
             "name": "editDweet",
             "outputs": [],
             "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "fakeReportingSuitReward",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
             "type": "function"
           },
           {
@@ -790,6 +879,32 @@ App={
           },
           {
             "inputs": [],
+            "name": "myReportingReward",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "myReportings",
+            "outputs": [
+              {
+                "internalType": "uint256[]",
+                "name": "list",
+                "type": "uint256[]"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
             "name": "owner",
             "outputs": [
               {
@@ -845,6 +960,25 @@ App={
             "name": "reportDweet",
             "outputs": [],
             "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
+            "name": "reportingClaimStatus",
+            "outputs": [
+              {
+                "internalType": "enum Dwitter.userdweetReportingStatus",
+                "name": "status",
+                "type": "uint8"
+              }
+            ],
+            "stateMutability": "view",
             "type": "function"
           },
           {
@@ -1003,6 +1137,19 @@ App={
           {
             "inputs": [
               {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+              }
+            ],
+            "name": "transferContractBalance",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
                 "internalType": "address",
                 "name": "",
                 "type": "address"
@@ -1058,7 +1205,7 @@ App={
           }
         ];
     
-        let address = "0xC4894C53339837c9EED10DDB36d0351a295ca8Fe";
+        let address = "0x8572bbA7f5EDdb8D70565D8B1DB0Dd8cFDc36BFC";
     
         App.contracts.dwitter = new web3.eth.Contract(abi, address);
         console.log(App.contracts.dwitter);
@@ -1113,6 +1260,7 @@ App={
         $("#userBio").text(App.user.bio);
         $("#userProfileImage").css("background-image", "url( https://ipfs.io/ipfs/" + App.user.imghash+ ")");;
         $("#userCoverImage").css("background-image", "url( https://ipfs.io/ipfs/" + App.user.coverhash+ ")");;
+
         }
       },
 
@@ -1126,10 +1274,11 @@ App={
         App.setLoading(true);
     
         // Render Tasks
-         await App.renderDweets();
+        await App.renderDweets();
     
         // Update loading state
         App.setLoading(false);
+        App.showAdvertisements();
     },
 
     renderDweets:async()=>{
@@ -1276,10 +1425,124 @@ App={
   },
 
   showAdvertisements:async ()=>{
-    setInterval(async()=>{
-      
+    App.advertisementsList=await App.contracts.dwitter.methods.getAds().call({from:App.account});
+    App.noOfAds=App.advertisementsList.length;
+    App.currentAd=0;
+    console.log("No Of adds"+App.noOfAds);
+    async function show(){
+        console.log("calling Function");
+        if(App.noOfAds>0){
+        console.log("Current Index: "+App.currentAd);
+        App.currentAd=(++App.currentAd)%App.noOfAds;
+        let adindex=App.currentAd+1;
+        console.log("Showing Add"+adindex);
+        let ad=await App.contracts.dwitter.methods.getAd(adindex).call({from:App.account});
+        if(ad.status==1 && (Date.now()/1000)<ad.expiry){
+          console.log("Executing Ad");
+          $("#ad").attr("href",ad.link );
+          $("#ad img").attr("src","https://ipfs.io/ipfs/" +ad.imgHash)
+        }else{
+          console.log("Rejected-Unaccepted Advertisement");
+          if(App.noOfAds>1) show();
+          else clearInterval(App.adInterval);
+        } 
+      }
+    }
 
-    },10000)
+    App.adInterval=setInterval(show,6000);
+  },
+
+  showAdvertisementStatus:async()=>{
+    $("#statusModal").modal("show");
+    $("#reportStatusHead").hide();
+    $("#advertisementStatusHead").show();
+    $("#statusModalBody").empty();
+    let advertisementsList=await App.contracts.dwitter.methods.myAdvertisements().call({from:App.account});
+    for(var i=0;i<advertisementsList.length;i++){
+      let status=await App.contracts.dwitter.methods.getAdvertisementStatus(advertisementsList[i]).call({from:App.account});
+      if(status==0){
+        let html=`      <tr>
+        <td>`+advertisementsList[i]+`</td>
+        <td>Pending</td>
+        </tr>`;
+        $("#statusModalBody").append(html);
+      }else if(status==1){
+        let html=`      <tr>
+        <td>`+advertisementsList[i]+`</td>
+        <td>Accepted</td>
+        </tr>`;
+        $("#statusModalBody").append(html);
+      }else{
+        let html=`<tr>
+        <td>`+advertisementsList[i]+`</td>
+        <td>Rejected</td>
+        </tr>`;
+        $("#statusModalBody").append(html);
+      }
+      
+    }
+  },
+
+  showReportStatus:async()=>{
+    $("#statusModal").modal("show");
+    $("#reportStatusHead").show();
+    $("#advertisementStatusHead").hide();
+    $("#statusModalBody").empty();
+    let reportsList=await App.contracts.dwitter.methods.myReportings().call({from:App.account});
+    for(var i=0;i<reportsList.length;i++){
+      let status=await App.contracts.dwitter.methods.getReportedDweetStatus(reportsList[i]).call({from:App.account});
+      if(status==0){
+        let html=`      <tr>
+        <td>`+reportsList[i]+`</td>
+        <td>Pending</td>
+        <td>-</td>
+        </tr>`;
+        $("#statusModalBody").append(html);
+      }else if(status==1){
+          let userClaimStatus=await App.contracts.dwitter.methods.reportingClaimStatus(reportsList[i]).call({from:App.account});
+          if(userClaimStatus==1){
+            let html=`      <tr>
+            <td>`+reportsList[i]+`</td>
+            <td>Banned</td>
+            <td><button class="btn-success claimReportReward" id="`+reportsList[i]+`">Claim</button></td>
+            </tr>`;
+            $("#statusModalBody").append(html);
+          }else if(userClaimStatus==2){
+            let html=`      <tr>
+            <td>`+reportsList[i]+`</td>
+            <td>Banned</td>
+            <td>Claimed</td>
+            </tr>`;
+            $("#statusModalBody").append(html);
+          }else{}
+      
+      }else{
+        let html=`<tr>
+        <td>`+reportsList[i]+`</td>
+        <td>Free</td>
+        <td>Not Eligible</td>
+        </tr>`;
+        $("#statusModalBody").append(html);
+      } 
+    }
+
+    $("#claimReportReward").on("Click",async(e)=>{
+      let id=e.currentTarget.id;
+      await App.contracts.dwitter.methods.claimReportingReward(id).send({from:App.account});
+      $("#statusModalMsg").text("Reward Sent");
+    })
+  },
+
+  showFakeReportingReward:async()=>{
+    $("#fakeSuitModal").modal("show");
+    let reward=await App.contracts.dwitter.methods.fakeReportingSuitReward().call({from:App.account});
+    $("#suitBalance").text(reward);
+
+    $("#withdrawSuitReward").on("click", async()=>{
+      await App.contracts.dwitter.methods.claimSuitReward().send({from:App.account});
+      let reward=await App.contracts.dwitter.methods.fakeReportingSuitReward().call({from:App.account});
+      $("#suitBalance").text(reward);
+    });
   }
 
 
@@ -1288,7 +1551,6 @@ App={
 $(() => {
   $(window).on("load",() => {
     App.load();
-
     $("#dweetBtn").on("click",()=>{
       $("#dweetModal").modal("show");
     });
@@ -1298,6 +1560,19 @@ $(() => {
     });
 
     $("#adBtn").on("click",App.advertise);
+
+    
+    $("#reportStatusBtn").on("click",()=>{
+     App.showReportStatus();
+    });
+
+    $("#adStatusBtn").on("click",()=>{
+      App.showAdvertisementStatus();
+    });
+
+    $("#suitRewardBtn").on("click",()=>{
+      App.showFakeReportingReward();
+    });
    
   });
 });

@@ -322,6 +322,26 @@
 	</div>
 </div>   
 
+
+  <!-- Fake Reporting Modal -->
+  <div id="fakeSuitModal" class="modal fade" style="z-index: 999999;">
+    <div class="modal-dialog modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <div class="icon-box">
+            <i class="material-icons">account_balance</i>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body text-center">
+          <h4>Fake Reporting Against You! <br>Reward Balance:</h4>	
+          <p id="suitBalance"></p>
+          <button type="button" class="btn btn-success" id="withdrawSuitReward">Withdraw</button> 
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Dweet Modal -->
 <div id="dweetModal" class="modal fade" style="z-index: 999999;">
 	<div class="modal-dialog modal-confirm" >
@@ -349,7 +369,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <h4 id="dweetModalMsg"></h4>
+        <h6 id="dweetModalMsg"></h6>
         <button type="button" class="btn btn-primary" id="dweetSubmit">Dweet</button>
       </div>
 
@@ -465,6 +485,50 @@
     </div>
   </div>     
 
+    <!-- Status Modal -->
+<div class="modal" id="statusModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Status</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <h4 id="statusModalMsg"></h4>
+          <table class="table table-striped">
+    <thead id="reportStatusHead" >
+      <tr>
+        <th>ID</th>
+        <th>Decision</th>
+        <th>Reward</th>
+      </tr>
+    </thead>
+
+    <thead id="advertisementStatusHead">
+      <tr>
+        <th>ID</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="statusModalBody">
+   
+    </tbody>
+  </table>
+  </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <nav class="navbar navbar-toggleable-md fixed-top">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -481,10 +545,13 @@
         <a class="nav-link" href="admin.html"><i class="octicon octicon-zap"></i>Maintain</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="octicon octicon-bell"></i> Notifications</a>
+        <a class="nav-link" href="#" type="button" id="reportStatusBtn"><i class="octicon octicon-info"></i> Reporting Status</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="octicon octicon-mail"></i> Messages</a>
+        <a class="nav-link" href="#" id="suitRewardBtn"><i class="octicon octicon-alert"></i> Fake Suit Reward</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="adStatusBtn"><i class="octicon octicon-broadcast"></i> My Advertisements</a>
       </li>
     </ul>
 
@@ -654,47 +721,11 @@
           <div class="panel-content">
 
             <button type="button" id="adBtn" class="btn-primary">Click Here</button>
-            <!-- <ol class="tweet-list">
-              <li class="tweet-card">
-                <div class="tweet-content">
-                  <img class="tweet-card-avatar" src="https://pbs.twimg.com/profile_images/822547732376207360/5g0FC8XX_bigger.jpg" alt="">
-                  <div class="tweet-header">
-                    <span class="fullname">
-                  <strong>Barack Obama <img src="/public/assets_index/img/tick.png" height="20" width="20"></strong>
-                </span>
-                    <span class="username">@BarackObama</span>
-                  </div>
-
-                  <button class="btn btn-follow">Follow</button>
-                </div>
+             <ol class="tweet-list"> 
+              <li class="tweet-card" >
+               <a href="" id="ad"> <img src="" class="img-fluid" alt=""></a>
               </li>
-              <li class="tweet-card">
-                <div class="tweet-content">
-                  <img class="tweet-card-avatar" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_bigger.jpg" alt="">
-                  <div class="tweet-header">
-                    <span class="fullname">
-                  <strong>Bill Gates <img src="/public/assets_index/img/tick.png" height="20" width="20"></strong>
-                </span>
-                    <span class="username">@BillGates</span>
-                  </div>
-
-                  <button class="btn btn-follow">Follow</button>
-                </div>
-              </li>
-              <li class="tweet-card">
-                <div class="tweet-content">
-                  <img class="tweet-card-avatar" src="https://pbs.twimg.com/profile_images/876792863459352577/SBLRu4VV_bigger.jpg" alt="">
-                  <div class="tweet-header">
-                    <span class="fullname">
-                  <strong>Richard Branson<img src="/public/assets_index/img/tick.png" height="20" width="20"></strong>
-                </span>
-                    <span class="username">@richardbranson</span>
-                  </div>
-
-                  <button class="btn btn-follow">Follow</button>
-                </div>
-              </li>
-            </ol> -->
+            </ol>
           </div>
         </div>
       </div>
