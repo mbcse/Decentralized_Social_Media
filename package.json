@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "start":"npm run serve",
-    "serve":"node server.js",
+    "start": "npm run serve",
+    "serve": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "lite-server"
   },
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/mbcse/Decentralized_Social_Media#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "lite-server": "^2.6.1"
   }
 }
