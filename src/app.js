@@ -1285,10 +1285,10 @@ App={
       let totalDweets=await App.contracts.dwitter.methods.totalDweets().call({from:App.account});
       let dweetcard=$("#dweet")
       $("#dweet").remove();
-      App.dweetsLoaded=totalDweets-10;
+      App.dweetsLoaded=totalDweets-2;
       if(App.dweetsLoaded<=0) App.dweetsLoaded=1;
 
-      for(var i=totalDweets;i>=App.dweetsLoaded;i--){
+      for(var i=totalDweets;i>App.dweetsLoaded;i--){
           try{
               let dweet=await App.contracts.dwitter.methods.getDweet(i).call({from:App.account});
               let author=await App.contracts.dwitter.methods.getUser(dweet.author).call({from:App.account});
@@ -1333,7 +1333,9 @@ App={
       $("#commentDiv").remove();
       let dweetId=parseInt(e.currentTarget.id);
       let comments=await App.contracts.dwitter.methods.getDweetComments(dweetId).call({from:App.account});
-      for(var i=0;i<=comments.length-1;i++){
+      console.log(comments);
+      if(comments.length==0) $("#commentContainer").html("<h3 class='mx-5'>There are no Comments!</h3>").height("50px");
+      else for(var i=0;i<=comments.length-1;i++){
         let comment=await App.contracts.dwitter.methods.getComment(comments[i]).call({from:App.account});
         let author=await App.contracts.dwitter.methods.getUser(comment.author).call({from:App.account});
         let commentDiv=commentTemplate.clone();
@@ -1341,10 +1343,14 @@ App={
         commentDiv.find(".title a").html("<b>"+author.name+"</b> @"+author.username);
         commentDiv.find(".time").text(new Date(comment.timestamp*1000).toDateString());
         commentDiv.find(".post-description p").text(comment.content);
+        $(".commentBtn").attr("id",dweetId);
+
         $("#commentContainer").append(commentDiv);
       }
 
-      $("#commentBtn").on("click",async()=>{
+      $(".commentBtn").on("click",async(e)=>{
+        let dweetId=e.currentTarget.id;
+        console.log(dweetId);
         await App.contracts.dwitter.methods.createComment(dweetId,$("#commentArea").val()).send({from:App.account});
         $("#commentArea").text("");
       });
@@ -1371,12 +1377,45 @@ App={
   },
 
   RenderMoreDweets:async()=>{
-    $(window).scroll(function(){
- 
+    $(window).scroll(async function(){
+      console.log("calling Scroll");
       var position = $(window).scrollTop();
       var bottom = $(document).height() - $(window).height();
-    
-      if( position == bottom ){
+      console.log(position," ",bottom);
+      if( position >= bottom ){
+        let currentDweet=App.dweetsLoaded;
+        App.dweetsLoaded=App.dweetsLoaded-2;
+        if(App.dweetsLoaded<=0) App.dweetsLoaded=1;
+        if(currentDweet<=0) currentDweet=1;
+        console.log(App.dweetsLoaded+"\n"+currentDweet);
+        for(var i=currentDweet;i>App.dweetsLoaded;i--){
+          console.log("FOR LOOP WORKING");
+          let dweetcard=$("#dweet");
+          try{
+            let dweet=await App.contracts.dwitter.methods.getDweet(i).call({from:App.account});
+            let author=await App.contracts.dwitter.methods.getUser(dweet.author).call({from:App.account});
+            console.log(author);
+            console.log(dweet);
+            let dweeettemplate=dweetcard.clone();
+            dweeettemplate.find(".fullname strong").html(author.name+`<img src="/public/assets_index/img/tick.png" height="20" width="20">`);
+            if(dweet.imghash!="")dweeettemplate.find(".tweet-text img").attr("src","https://ipfs.io/ipfs/" + dweet.imgHash);
+            dweeettemplate.find(".tweet-text p").text(dweet.content);
+            dweeettemplate.find(".username ").html(author.username);
+            let timestamp=new Date(dweet.timestamp*1000);
+            dweeettemplate.find(".tweet-time").html(timestamp.toDateString());
+            dweeettemplate.find(".tweet-card-avatar").attr("src","https://ipfs.io/ipfs/" + author.imghash);
+            dweeettemplate.find(".tweet-footer-btn").attr("id",i);
+            dweeettemplate.find(".like span").text(dweet.likeCount);
+            dweeettemplate.find(".like").on("click",App.like);
+            dweeettemplate.find(".comment").on("click",App.showComments);
+            dweeettemplate.find(".report").on("click",App.report);
+            console.log(dweeettemplate);
+            $("#dweet-list").append(dweeettemplate);
+        }catch(e){
+          console.log(e);
+        }
+           
+        }
       
       
       }
@@ -1428,21 +1467,19 @@ App={
     App.advertisementsList=await App.contracts.dwitter.methods.getAds().call({from:App.account});
     App.noOfAds=App.advertisementsList.length;
     App.currentAd=0;
-    console.log("No Of adds"+App.noOfAds);
+    
     async function show(){
-        console.log("calling Function");
+        
         if(App.noOfAds>0){
-        console.log("Current Index: "+App.currentAd);
+        
         App.currentAd=(++App.currentAd)%App.noOfAds;
         let adindex=App.currentAd+1;
-        console.log("Showing Add"+adindex);
+        
         let ad=await App.contracts.dwitter.methods.getAd(adindex).call({from:App.account});
         if(ad.status==1 && (Date.now()/1000)<ad.expiry){
-          console.log("Executing Ad");
           $("#ad").attr("href",ad.link );
           $("#ad img").attr("src","https://ipfs.io/ipfs/" +ad.imgHash)
         }else{
-          console.log("Rejected-Unaccepted Advertisement");
           if(App.noOfAds>1) show();
           else clearInterval(App.adInterval);
         } 
@@ -1573,6 +1610,8 @@ $(() => {
     $("#suitRewardBtn").on("click",()=>{
       App.showFakeReportingReward();
     });
+
+    App.RenderMoreDweets();
    
   });
 });
