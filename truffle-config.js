@@ -18,11 +18,15 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 // const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+
+const fs = require("fs");
+const mnemonic = fs.readFileSync(".secret").toString().trim();
+const rinkeybyinfuraURL ="https://rinkeby.infura.io/v3/6392c56402994f0d966a64f6655a9c00";
+const kovaninfuraURL="https://kovan.infura.io/v3/6392c56402994f0d966a64f6655a9c00";
+const ropsteninfuraURL="https://ropsten.infura.io/v3/6392c56402994f0d966a64f6655a9c00";
+const goerliinfuraURL="https://goerli.infura.io/v3/6392c56402994f0d966a64f6655a9c00";
 
 module.exports = {
   /**
@@ -46,6 +50,26 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
+    },
+    rinkeby: {
+      provider: () => new HDWalletProvider(mnemonic, rinkeybyinfuraURL),
+      network_id: 4, // Rinkeby's network id
+      gas: 5500000,
+    },
+    kovan: {
+      provider: () => new HDWalletProvider(mnemonic, kovaninfuraURL),
+      network_id: 42, // Rinkeby's network id
+      gas: 5500000,
+    },
+    goerli: {
+      provider: () => new HDWalletProvider(mnemonic, goerliinfuraURL),
+      network_id: 5, // Rinkeby's network id
+      gas: 5500000,
+    },
+    ropsten: {
+      provider: () => new HDWalletProvider(mnemonic, ropsteninfuraURL),
+      network_id: 3, // Rinkeby's network id
+      gas: 5500000,
     },
     // Another network with more advanced options...
     // advanced: {

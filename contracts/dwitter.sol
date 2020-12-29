@@ -587,7 +587,10 @@ contract Dwitter{
     function getAdvertisementStatus(uint _id) public view onlyAllowedUser(msg.sender) returns(AdApprovalStatus status){
         return advertisements[_id].status;
     }
-    
+
+/*
+****************************************Owner Admin ******************************************************************************************
+*/
     /// @notice Get balance of contract 
     /// @return balance balance of contract
     function getBalance()public view onlyOwner() returns(uint balance){
@@ -599,6 +602,16 @@ contract Dwitter{
     function transferContractBalance(uint _amount)public onlyOwner{
         require(_amount<=address(this).balance);
         msg.sender.transfer(_amount);
+    }
+    
+    function stopDapp() public onlyOwner{
+        require(!stopped);
+        stopped=true;
+    }
+    
+    function startDapp() public onlyOwner{
+        require(stopped);
+        stopped=false;
     }
     
     
