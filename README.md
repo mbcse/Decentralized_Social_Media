@@ -8,19 +8,19 @@ In the present world social media has become a very important part of our lives.
 
 ## Platform Overview
 
-The platform is a decentralized social media something similar to twitter but totally in a decentralized way having now server. The platform is having a smart contract containing all the important logic and is deployed on Ethereum Blockchain. Some of the coll features of the platform:
+The platform is a decentralized social media something similar to twitter but totally in a decentralized way having no server. The platform is having a smart contract containing all the important logic and is deployed on Ethereum Blockchain. Some of the features of the platform are:
 - Secure and user friendly login using metamask wallet
 - Only your Public address is the key to access the platform
 - Cool user profile same as Twitter
 - Easy to use interface
 - Commenting feature on dweets
 - Reporting feature on dweets
-  - Once a dweet get a specified no of reports it will be sent to maintainers or action
-  - You have to stake some amount for reporting
+  - Once a dweet get a specified no of reports it will be sent to maintainers for action
+  - You will have to stake some ethers for reporting
   - If the dweet is banned by maintainers you will get refund and a reward
-  - If the dweet is not Banned by maintainers you will get no refund and the stake amount will got to reported dweet author
+  - If the dweet is not Banned by maintainers you will get no refund and the staked amount will got to the reported dweet author
 - Like feature on dweets
-- You can upload advertisements and reach out to platform user at nominal cost
+- You can upload advertisements(image and a link) and reach out to platform users at nominal cost
   - Advertisements once submitted will be sent to maintainers for acceptance
   -If it is rejected then it 80% amount will be refunded
 - Maintainers can be added to the platform
@@ -38,7 +38,7 @@ The platform is a decentralized social media something similar to twitter but to
 - Truffle
 
 ## Future Work
-- Use Metatransactions to make it gas free for users
+- Use Meta transactions(gasless transactions) to make the platform gas free for users
 - Add more Features like follow, profile view etc
 - Add video Advertisement options
 - Add reporting on comments
@@ -70,6 +70,7 @@ The platform is a decentralized social media something similar to twitter but to
 3. In the projects root directory, run `truffle console` to interact with the porject.
 4. To compile contracts run `truffle compile`
 5. To deploy run `truffle migrate` 
+6. To run test run `truffle test` 
 
 ### Frontend
 1. In the projects root directory, run `npm start`
