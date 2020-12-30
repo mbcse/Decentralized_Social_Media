@@ -123,18 +123,18 @@ contract Dwitter{
     // mapping(uint=>mapping(address=>bool)) private commentLikers; // Mapping to track who liked on which comment
     mapping(uint=>uint[]) private dweetComments; // Getting comments for a specific dweet
     
-    modifier stopInEmergency { require(!stopped); _; }
+    modifier stopInEmergency { require(!stopped,"Dapp has been stopped!"); _; }
     modifier onlyInEmergency { require(stopped); _; }
     
-    modifier onlyOwner{require(msg.sender==owner); _;}
-    modifier onlyDweetAuthor(uint id){require(msg.sender==dweets[id].author); _;}
-    modifier onlyCommentAuthor(uint id){require(msg.sender==comments[id].author); _;}
-    modifier onlyAllowedUser(address user){require(users[user].status==accountStatus.Active); _;}
-    modifier onlyActiveDweet(uint id){require(dweets[id].status==cdStatus.Active); _;}
-    modifier onlyActiveComment(uint id){require(comments[id].status==cdStatus.Active); _;}
-    modifier usernameTaken(string memory username){require(!usernames[username]); _;}
+    modifier onlyOwner{require(msg.sender==owner,"You are not owner!"); _;}
+    modifier onlyDweetAuthor(uint id){require(msg.sender==dweets[id].author,"You are not Author!"); _;}
+    modifier onlyCommentAuthor(uint id){require(msg.sender==comments[id].author,"You are not Author!"); _;}
+    modifier onlyAllowedUser(address user){require(users[user].status==accountStatus.Active,"Not a Registered User!"); _;}
+    modifier onlyActiveDweet(uint id){require(dweets[id].status==cdStatus.Active,"Not a active dweet"); _;}
+    modifier onlyActiveComment(uint id){require(comments[id].status==cdStatus.Active,"Not a active comment"); _;}
+    modifier usernameTaken(string memory username){require(!usernames[username],"Username already taken"); _;}
  // modifier checkUserExists(){require(registeredUser[msg.sender]); _;}
-    modifier checkUserNotExists(address user){require(users[user].status==accountStatus.NP); _;}
+    modifier checkUserNotExists(address user){require(users[user].status==accountStatus.NP,"User already registered"); _;}
 
     
     event logRegisterUser(address user, uint id);
@@ -146,6 +146,7 @@ contract Dwitter{
     constructor() public {
         owner=msg.sender;
         addMaintainer(msg.sender);
+        registerUser("owner","owner","","","owner");
     }
         
 /*
@@ -219,9 +220,9 @@ contract Dwitter{
 **************************************DWEET FUNCTIONS***********************************************************
 */      
     /// @notice Create a new dweet
-    ///@param _hashtag hashtag of dweet ex. #ethereum
-    ///@param _content content of dweet to show
-    ///@param _imghash Image type content ipfs hash
+    /// @param _hashtag hashtag of dweet ex. #ethereum
+    /// @param _content content of dweet to show
+    /// @param _imghash Image type content ipfs hash
     function createDweet(string memory _hashtag, string memory _content, string memory _imghash) public stopInEmergency onlyAllowedUser(msg.sender) {
         uint id=++totalDweets;
         dweets[id]=Dweet(id, msg.sender, _hashtag, _content, _imghash, block.timestamp , 0, 0, cdStatus.Active);
@@ -386,11 +387,11 @@ contract Dwitter{
     enum reportAction{NP, Banned, Free}
     
     modifier onlyMaintainer(){
-        require(isMaintainer[msg.sender]);
+        require(isMaintainer[msg.sender],"You are not a maintainer");
         _;
     }
     
-    modifier paidEnoughforReporter() { require(msg.value >= reportingstakePrice); _;}
+    modifier paidEnoughforReporter() { require(msg.value >= reportingstakePrice,"You have not paid enough for advertisement"); _;}
         
     modifier checkValueforReporter() {
         _;
@@ -418,8 +419,8 @@ contract Dwitter{
     /// @notice Report a dweet
     /// @param _dweetId Id of the dweet to be reported
     function reportDweet(uint _dweetId) public payable onlyActiveDweet(_dweetId) onlyAllowedUser(msg.sender) paidEnoughforReporter checkValueforReporter{
-        require(dweets[_dweetId].reportCount<=noOfReportsRequired);
-        require(!dweetReporters[_dweetId][msg.sender]);
+        require(dweets[_dweetId].reportCount<=noOfReportsRequired,"Dweet have got required no of Reports");
+        require(!dweetReporters[_dweetId][msg.sender],"You have already Reported!");
         dweetReporters[_dweetId][msg.sender]=true;//Reentracy attack Prevented
         userReportList[msg.sender].push(_dweetId);
         claimedReward[_dweetId][msg.sender]=userdweetReportingStatus.Reported;
@@ -434,7 +435,7 @@ contract Dwitter{
     /// @param _dweetId Id of dweets
     /// @param _action ban or free, true or false
     function takeAction(uint _dweetId, bool _action) public onlyMaintainer onlyActiveDweet(_dweetId) onlyAllowedUser(msg.sender){
-        require(actionOnDweet[_dweetId]==reportAction.NP);
+        require(actionOnDweet[_dweetId]==reportAction.NP,"Action already taken!");
         if(_action){
           actionOnDweet[_dweetId]=reportAction.Banned;
           banDweet(_dweetId);
@@ -448,16 +449,16 @@ contract Dwitter{
     /// @notice Claim right reporting reward
     /// @param _id Id of dweet on which reward is to be claimed  
     function claimReportingReward(uint _id) public onlyAllowedUser(msg.sender){
-        require(claimedReward[_id][msg.sender]==userdweetReportingStatus.Reported);
+        require(claimedReward[_id][msg.sender]==userdweetReportingStatus.Reported,"You have not reported or already claimed");
         require(userReportList[msg.sender].length>0);
-        require(actionOnDweet[_id]==reportAction.Banned);
+        require(actionOnDweet[_id]==reportAction.Banned,"Not eligible for reward, Dweet has been freed my mainatiners");
         claimedReward[_id][msg.sender]=userdweetReportingStatus.Claimed;//Reentracy Prevented
         msg.sender.transfer(reportingRewardPrice);
     }
     
     /// @notice Claim fake reporting reward(suit)
     function claimSuitReward()public onlyAllowedUser(msg.sender){
-        require(fakeReportingReward[msg.sender]>0);
+        require(fakeReportingReward[msg.sender]>0,"Not enough balance");
         uint amount=fakeReportingReward[msg.sender];
         fakeReportingReward[msg.sender]=0;//Attack Prevented
         msg.sender.transfer(amount);
@@ -545,7 +546,7 @@ contract Dwitter{
     /// @param _id Id of advertisement
     /// @param _decision Approval decision Accepted or Rejected, true or false
     function advertisementApproval(uint _id, bool _decision) public onlyMaintainer{
-        require(advertisements[_id].status==AdApprovalStatus.NP);
+        require(advertisements[_id].status==AdApprovalStatus.NP,"Approval already given!");
         if(_decision){
             advertisements[_id].status=AdApprovalStatus.Approved;
             advertisements[_id].expiry=block.timestamp+ 1 days;
@@ -600,17 +601,17 @@ contract Dwitter{
     /// @notice Withdraw contract funds to owner
     /// @param _amount Amount to be withdrawn
     function transferContractBalance(uint _amount)public onlyOwner{
-        require(_amount<=address(this).balance);
+        require(_amount<=address(this).balance,"Withdraw amount greater than balance");
         msg.sender.transfer(_amount);
     }
     
     function stopDapp() public onlyOwner{
-        require(!stopped);
+        require(!stopped,"Already stopped");
         stopped=true;
     }
     
     function startDapp() public onlyOwner{
-        require(stopped);
+        require(stopped,"Already started");
         stopped=false;
     }
     
