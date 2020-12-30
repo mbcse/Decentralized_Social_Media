@@ -1,5 +1,5 @@
 # Decentralized Social Media(Dwitter)
-Consensys Bootcamp Project
+`Consensys Bootcamp Project`
 
 ## Introduction
 
