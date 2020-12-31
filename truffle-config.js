@@ -72,7 +72,7 @@ module.exports = {
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, ropsteninfuraURL),
       network_id: 3, // Ropsten's network id
-      gas: 8000029,
+      gas:  8000000,
       skipDryRun: true,
     },
     // Another network with more advanced options...

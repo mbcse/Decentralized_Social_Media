@@ -1229,10 +1229,10 @@ App={
           }
         ];
     
-        App.Rinkeby="0xCDCE9C4C4Fe5B317CD0a4976891bF85aDB292BFB";
+        App.Rinkeby="0x483EADa90CBBBC571879220325Ce5e487cdA8f44";
         App.Ropsten="0xB8224485479051c4299449f3570058e3eF783C15";
-        App.Kovan="0xCffcc101ec936D5642eAd34e40b601F248c51728";
-        App.Goerli="0xD11ae434aC08a5bC9f8a2498058294A6a488033F";
+        App.Kovan="0x70Cb84cAB67Ab0E8D30A99c08a5D6DD21c585FCa";
+        App.Goerli="0x634CdABb2177491aC07517929E35fBB237086906";
 
         if(App.network=="kovan") App.contracts.dwitter = new web3.eth.Contract(abi, App.Kovan);
         else if(App.network=="rinkeby") App.contracts.dwitter = new web3.eth.Contract(abi, App.Rinkeby);
