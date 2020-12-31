@@ -242,6 +242,10 @@ App={
             "type": "event"
           },
           {
+            "stateMutability": "nonpayable",
+            "type": "fallback"
+          },
+          {
             "inputs": [
               {
                 "internalType": "address",
@@ -307,6 +311,19 @@ App={
               }
             ],
             "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address payable",
+                "name": "_newOwner",
+                "type": "address"
+              }
+            ],
+            "name": "changeOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
           },
           {
@@ -723,6 +740,11 @@ App={
               },
               {
                 "internalType": "string",
+                "name": "coverhash",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
                 "name": "bio",
                 "type": "string"
               }
@@ -879,19 +901,6 @@ App={
           },
           {
             "inputs": [],
-            "name": "myReportingReward",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "balance",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
             "name": "myReportings",
             "outputs": [
               {
@@ -1016,6 +1025,20 @@ App={
               }
             ],
             "name": "revokeMaintainer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "startDapp",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "stopDapp",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -1205,7 +1228,7 @@ App={
           }
         ];
     
-        let address = "0x8572bbA7f5EDdb8D70565D8B1DB0Dd8cFDc36BFC";
+        let address = "0xCffcc101ec936D5642eAd34e40b601F248c51728";
     
         App.contracts.dwitter = new web3.eth.Contract(abi, address);
         console.log(App.contracts.dwitter);

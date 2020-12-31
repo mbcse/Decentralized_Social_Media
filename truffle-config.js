@@ -54,22 +54,26 @@ module.exports = {
     rinkeby: {
       provider: () => new HDWalletProvider(mnemonic, rinkeybyinfuraURL),
       network_id: 4, // Rinkeby's network id
-      gas: 5500000,
+      gas: 10000000,
+      skipDryRun: true,
     },
     kovan: {
       provider: () => new HDWalletProvider(mnemonic, kovaninfuraURL),
-      network_id: 42, // Rinkeby's network id
-      gas: 5500000,
+      network_id: 42, // Kovan's network id
+      gas: 10000000,
+      skipDryRun: true,
     },
     goerli: {
       provider: () => new HDWalletProvider(mnemonic, goerliinfuraURL),
-      network_id: 5, // Rinkeby's network id
-      gas: 5500000,
+      network_id: 5, // Goerli's network id
+      gas: 8000000,
+      skipDryRun: true,
     },
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, ropsteninfuraURL),
-      network_id: 3, // Rinkeby's network id
-      gas: 5500000,
+      network_id: 3, // Ropsten's network id
+      gas: 8000029,
+      skipDryRun: true,
     },
     // Another network with more advanced options...
     // advanced: {
@@ -106,7 +110,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.6.1",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.7.5",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
        settings: {          // See the solidity docs for advice about optimization and evmVersion
        optimizer: {
