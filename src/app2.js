@@ -1,6 +1,6 @@
 App={
     loading:false,
-    ipfs: window.IpfsApi('ipfs.infura.io', 5001,{ protocol: 'http'}),
+    ipfs: window.IpfsApi('ipfs.infura.io', 5001,{ protocol: 'https'}),
     contracts:{},
     load: async()=>{
         await App.loadWeb3();
@@ -42,6 +42,209 @@ App={
     loadContract: async () => {
       
         let abi = [
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+              }
+            ],
+            "name": "addMaintainer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "_decision",
+                "type": "bool"
+              }
+            ],
+            "name": "advertisementApproval",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address payable",
+                "name": "_newOwner",
+                "type": "address"
+              }
+            ],
+            "name": "changeOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_username",
+                "type": "string"
+              }
+            ],
+            "name": "changeUsername",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
+            "name": "claimReportingReward",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "claimSuitReward",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_dweetid",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "_comment",
+                "type": "string"
+              }
+            ],
+            "name": "createComment",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_hashtag",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_content",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_imghash",
+                "type": "string"
+              }
+            ],
+            "name": "createDweet",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
+            "name": "deleteComment",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
+            "name": "deleteDweet",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_commentid",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "_comment",
+                "type": "string"
+              }
+            ],
+            "name": "editComment",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "_hashtag",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_content",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_imghash",
+                "type": "string"
+              }
+            ],
+            "name": "editDweet",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+              }
+            ],
+            "name": "likeDweet",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
           {
             "inputs": [],
             "stateMutability": "nonpayable",
@@ -243,8 +446,50 @@ App={
             "type": "event"
           },
           {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_username",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_imgHash",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_coverHash",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_bio",
+                "type": "string"
+              }
+            ],
+            "name": "registerUser",
+            "outputs": [],
             "stateMutability": "nonpayable",
-            "type": "fallback"
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_dweetId",
+                "type": "uint256"
+              }
+            ],
+            "name": "reportDweet",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
           },
           {
             "inputs": [
@@ -254,7 +499,57 @@ App={
                 "type": "address"
               }
             ],
-            "name": "addMaintainer",
+            "name": "revokeMaintainer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "startDapp",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "stopDapp",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_imgHash",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_link",
+                "type": "string"
+              }
+            ],
+            "name": "submitAdvertisement",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_dweetId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "_action",
+                "type": "bool"
+              }
+            ],
+            "name": "takeAction",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -263,19 +558,18 @@ App={
             "inputs": [
               {
                 "internalType": "uint256",
-                "name": "_id",
+                "name": "_amount",
                 "type": "uint256"
-              },
-              {
-                "internalType": "bool",
-                "name": "_decision",
-                "type": "bool"
               }
             ],
-            "name": "advertisementApproval",
+            "name": "transferContractBalance",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
+          },
+          {
+            "stateMutability": "nonpayable",
+            "type": "fallback"
           },
           {
             "inputs": [],
@@ -312,165 +606,6 @@ App={
               }
             ],
             "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address payable",
-                "name": "_newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "changeOwner",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "string",
-                "name": "_username",
-                "type": "string"
-              }
-            ],
-            "name": "changeUsername",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
-              }
-            ],
-            "name": "claimReportingReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "claimSuitReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_dweetid",
-                "type": "uint256"
-              },
-              {
-                "internalType": "string",
-                "name": "_comment",
-                "type": "string"
-              }
-            ],
-            "name": "createComment",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "string",
-                "name": "_hashtag",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_content",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_imghash",
-                "type": "string"
-              }
-            ],
-            "name": "createDweet",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
-              }
-            ],
-            "name": "deleteComment",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
-              }
-            ],
-            "name": "deleteDweet",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_commentid",
-                "type": "uint256"
-              },
-              {
-                "internalType": "string",
-                "name": "_comment",
-                "type": "string"
-              }
-            ],
-            "name": "editComment",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
-              },
-              {
-                "internalType": "string",
-                "name": "_hashtag",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_content",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_imghash",
-                "type": "string"
-              }
-            ],
-            "name": "editDweet",
-            "outputs": [],
-            "stateMutability": "nonpayable",
             "type": "function"
           },
           {
@@ -678,6 +813,19 @@ App={
             "type": "function"
           },
           {
+            "inputs": [],
+            "name": "getReportedDweets",
+            "outputs": [
+              {
+                "internalType": "uint256[]",
+                "name": "list",
+                "type": "uint256[]"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
             "inputs": [
               {
                 "internalType": "uint256",
@@ -691,19 +839,6 @@ App={
                 "internalType": "enum Dwitter.reportAction",
                 "name": "status",
                 "type": "uint8"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "getReportedDweets",
-            "outputs": [
-              {
-                "internalType": "uint256[]",
-                "name": "list",
-                "type": "uint256[]"
               }
             ],
             "stateMutability": "view",
@@ -875,19 +1010,6 @@ App={
             "type": "function"
           },
           {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
-              }
-            ],
-            "name": "likeDweet",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
             "inputs": [],
             "name": "myAdvertisements",
             "outputs": [
@@ -924,52 +1046,6 @@ App={
               }
             ],
             "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "string",
-                "name": "_username",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_imgHash",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_coverHash",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_bio",
-                "type": "string"
-              }
-            ],
-            "name": "registerUser",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_dweetId",
-                "type": "uint256"
-              }
-            ],
-            "name": "reportDweet",
-            "outputs": [],
-            "stateMutability": "payable",
             "type": "function"
           },
           {
@@ -1018,33 +1094,6 @@ App={
             "type": "function"
           },
           {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "_user",
-                "type": "address"
-              }
-            ],
-            "name": "revokeMaintainer",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "startDapp",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "stopDapp",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
             "inputs": [],
             "name": "stopped",
             "outputs": [
@@ -1055,42 +1104,6 @@ App={
               }
             ],
             "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "string",
-                "name": "_imgHash",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_link",
-                "type": "string"
-              }
-            ],
-            "name": "submitAdvertisement",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "_dweetId",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bool",
-                "name": "_action",
-                "type": "bool"
-              }
-            ],
-            "name": "takeAction",
-            "outputs": [],
-            "stateMutability": "nonpayable",
             "type": "function"
           },
           {
@@ -1161,14 +1174,20 @@ App={
           {
             "inputs": [
               {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_username",
+                "type": "string"
               }
             ],
-            "name": "transferContractBalance",
-            "outputs": [],
-            "stateMutability": "nonpayable",
+            "name": "usernameAvailable",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "status",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
             "type": "function"
           },
           {
@@ -1207,30 +1226,11 @@ App={
             ],
             "stateMutability": "view",
             "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "string",
-                "name": "_username",
-                "type": "string"
-              }
-            ],
-            "name": "usernameAvailable",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "status",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
           }
         ];
         
         App.Rinkeby="0xCDCE9C4C4Fe5B317CD0a4976891bF85aDB292BFB";
-        App.Ropsten="0xDe65f8a67Ff7BCBb29f52c6fd01BA53701Fd80Ce";
+        App.Ropsten="0xB8224485479051c4299449f3570058e3eF783C15";
         App.Kovan="0xCffcc101ec936D5642eAd34e40b601F248c51728";
         App.Goerli="0xD11ae434aC08a5bC9f8a2498058294A6a488033F";
 

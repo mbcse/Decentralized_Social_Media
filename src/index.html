@@ -286,7 +286,7 @@
             <label for="bio">Bio</label>
             <input type="text" class="form-control" id="bio" placeholder="Bio" >
           </div>
-        
+          <h3 id="registerModalMsg" style="align-self: center; color:#e85e6c;"></h3>
           <button type="button" id="registerBtn" class="btn btn-primary">Submit</button>
         </form>
       </div>
@@ -367,12 +367,11 @@
           </div>
         </form>
       </div>
+      <h3 id="dweetModalMsg" style="align-self: center; color: #e85e6c;"></h3>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <h6 id="dweetModalMsg"></h6>
-        <button type="button" class="btn btn-primary" id="dweetSubmit">Dweet</button>
+        <button type="button" class="btn btn-primary" id="dweetSubmit">Dweet</button> <br> 
       </div>
-
 			</div>
 		</div>
 	</div>
@@ -429,8 +428,7 @@
                               <div class="card-block">
                                   <textarea placeholder="Write your comment here!" id="commentArea" class="pb-cmnt-textarea"></textarea>
                                   <form class="form-inline">
-                              
-                                      <button class="btn btn-primary float-xs-right commentBtn" type="button">Share</button>
+                                      <button type="button" class="btn btn-primary float-xs-right commentBtn">Share</button>
                                   </form>
                               </div>
                           </div>
@@ -441,7 +439,6 @@
         <div class="modal-footer">
 
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <!-- <button type="button" class="btn btn-primary" id="dweetSubmit">Dweet</button> -->
         </div>
   
         </div>
