@@ -9,7 +9,7 @@ _____           _ _   _
 */
 
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.5.10;
+pragma solidity >=0.7.0 <0.8.0;
     library SafeMath {
     
         function add(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -143,10 +143,14 @@ contract Dwitter{
     event logDweetDeleted(uint id, string hashtag);
     // event logCommentBanned(uint id, string hashtag);
     
-    constructor() public {
+    constructor() {
         owner=msg.sender;
         addMaintainer(msg.sender);
         registerUser("owner","owner","","","owner");
+    }
+    
+    fallback() external{
+        revert();
     }
         
 /*
