@@ -172,7 +172,8 @@ contract Dwitter{
     /// @param _bio Biography of user
     function registerUser(string memory _username, string memory _name, string memory _imgHash, string memory _coverHash, string memory _bio ) public stopInEmergency checkUserNotExists(msg.sender) usernameTaken(_username){
         usernames[_username]=true;// Attack Prevented
-        users[msg.sender]=User(++totalUsers, msg.sender, _username, _name, _imgHash, _coverHash, _bio, accountStatus.Active);
+        uint id=totalUsers.add(1);
+        users[msg.sender]=User(id, msg.sender, _username, _name, _imgHash, _coverHash, _bio, accountStatus.Active);
         userAddressFromUsername[_username]=msg.sender;
         emit logRegisterUser(msg.sender, totalUsers);
     }
@@ -228,7 +229,7 @@ contract Dwitter{
     /// @param _content content of dweet to show
     /// @param _imghash Image type content ipfs hash
     function createDweet(string memory _hashtag, string memory _content, string memory _imghash) public stopInEmergency onlyAllowedUser(msg.sender) {
-        uint id=++totalDweets;
+        uint id=totalDweets.add(1);
         dweets[id]=Dweet(id, msg.sender, _hashtag, _content, _imghash, block.timestamp , 0, 0, cdStatus.Active);
         userDweets[msg.sender].push(totalDweets);
         emit logDweetCreated(msg.sender, users[msg.sender].id, totalDweets, _hashtag);
@@ -286,7 +287,7 @@ contract Dwitter{
     /// @param _id Id of dweet to be likeDweet
     function likeDweet(uint _id) public onlyAllowedUser(msg.sender) onlyActiveDweet(_id){
         require(!dweetLikers[_id][msg.sender]);
-        dweets[_id].likeCount++;
+        dweets[_id].likeCount.add(1);
         dweetLikers[_id][msg.sender]=true;
     }
     
@@ -310,7 +311,7 @@ contract Dwitter{
     /// @param  _dweetid Id of dweetList
     /// @param  _comment content of comment
     function createComment(uint _dweetid, string memory _comment) public stopInEmergency onlyAllowedUser(msg.sender)  onlyActiveDweet(_dweetid){
-        uint id=++totalComments;
+        uint id=totalComments.add(1);
         comments[id]=Comment(id, msg.sender, _dweetid, _comment, 0, block.timestamp, cdStatus.Active);
         userComments[msg.sender].push(totalComments);
         dweetComments[_dweetid].push(totalComments);
@@ -399,7 +400,7 @@ contract Dwitter{
         
     modifier checkValueforReporter() {
         _;
-        uint amountToRefund = msg.value - reportingstakePrice;
+        uint amountToRefund = msg.value.sub(reportingstakePrice);
         msg.sender.transfer(amountToRefund);
     }
       
@@ -407,7 +408,7 @@ contract Dwitter{
     /// @param _user Address of user to be added as maintainer
     function addMaintainer(address _user) public onlyOwner {
         isMaintainer[_user]=true;
-        maintainerId[msg.sender]=++totalMaintainers;
+        maintainerId[msg.sender]=totalMaintainers.add(1);
     }
      
     /// @notice Remove a maintainer 
@@ -428,7 +429,7 @@ contract Dwitter{
         dweetReporters[_dweetId][msg.sender]=true;//Reentracy attack Prevented
         userReportList[msg.sender].push(_dweetId);
         claimedReward[_dweetId][msg.sender]=userdweetReportingStatus.Reported;
-        uint reports=++dweets[_dweetId].reportCount;
+        uint reports=dweets[_dweetId].reportCount.add(1);
         if(reports==noOfReportsRequired){
           dweetsReportedList.push(_dweetId);
           emit logDweetReported(_dweetId, dweets[_dweetId].hashtag);
@@ -445,7 +446,7 @@ contract Dwitter{
           banDweet(_dweetId);
         }else{
           actionOnDweet[_dweetId]=reportAction.Free;
-          fakeReportingReward[dweets[_dweetId].author]+=reportingstakePrice.mul(noOfReportsRequired);
+          fakeReportingReward[dweets[_dweetId].author]=fakeReportingReward[dweets[_dweetId].author].add(reportingstakePrice.mul(noOfReportsRequired));
           emit logDweetFreed(_dweetId, dweets[_dweetId].hashtag, maintainerId[msg.sender]);
         }
     }
@@ -540,7 +541,7 @@ contract Dwitter{
     /// @param _imgHash Ipfs hash of image to be shown as advertisement
     /// @param _link Href link for the advertisement
     function submitAdvertisement(string memory _imgHash, string memory _link) public payable onlyAllowedUser(msg.sender) paidEnoughforAdvertisement checkValueforAdvertisement{
-        uint id=++totalAdvertisements;
+        uint id=totalAdvertisements.add(1);
         advertisements[id]=Advertisement(id, msg.sender, _imgHash, _link, AdApprovalStatus.NP, 0);
         advertisementsList.push(id);
         advertiserAdvertisementsList[msg.sender].push(id);
@@ -553,7 +554,7 @@ contract Dwitter{
         require(advertisements[_id].status==AdApprovalStatus.NP,"Approval already given!");
         if(_decision){
             advertisements[_id].status=AdApprovalStatus.Approved;
-            advertisements[_id].expiry=block.timestamp+ 1 days;
+            advertisements[_id].expiry=block.timestamp.add(1 days);
             emit logAdvertisementApproved(_id,maintainerId[msg.sender]);
         }else{
             advertisements[_id].status=AdApprovalStatus.Rejected;
@@ -619,5 +620,8 @@ contract Dwitter{
         stopped=false;
     }
     
+    function changeOwner(address payable _newOwner) public onlyOwner{
+        owner=_newOwner;
+    }
     
 }
