@@ -18,7 +18,8 @@ App={
             try {
             $("#msg").text("Please connect your metamask")  
             var res = await ethereum.enable();
-            web3.eth.net.getNetworkType().then(console.log);
+            App.network=await web3.eth.net.getNetworkType();
+            console.log(App.network);
             } catch (error) {
             $("#generalMsgModal").modal("show");
             $("#generalModalMessage").text("Permission Denied, Metamask Not connected!");
@@ -1228,9 +1229,16 @@ App={
           }
         ];
     
-        let address = "0xCffcc101ec936D5642eAd34e40b601F248c51728";
-    
-        App.contracts.dwitter = new web3.eth.Contract(abi, address);
+        App.Rinkeby="0xCDCE9C4C4Fe5B317CD0a4976891bF85aDB292BFB";
+        App.Ropsten="0xDe65f8a67Ff7BCBb29f52c6fd01BA53701Fd80Ce";
+        App.Kovan="0xCffcc101ec936D5642eAd34e40b601F248c51728";
+        App.Goerli="0xD11ae434aC08a5bC9f8a2498058294A6a488033F";
+
+        if(App.network=="kovan") App.contracts.dwitter = new web3.eth.Contract(abi, App.Kovan);
+        else if(App.network=="rinkeby") App.contracts.dwitter = new web3.eth.Contract(abi, App.Rinkeby);
+        else if(App.network=="ropsten") App.contracts.dwitter = new web3.eth.Contract(abi, App.Ropsten);
+        else if(App.network=="goerli") App.contracts.dwitter = new web3.eth.Contract(abi, App.Goerli);
+        else App.showError("Please Connect to valid network");
         console.log(App.contracts.dwitter);
       },
 
@@ -1396,7 +1404,7 @@ App={
 
   showError:async(msg)=>{
     $("#generalMsgModal").modal("show");
-    $("generalModalMessage").text(msg);
+    $("#generalModalMessage").text(msg);
   },
 
   RenderMoreDweets:async()=>{
