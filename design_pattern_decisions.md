@@ -1,7 +1,7 @@
 # Design Patterns
 
 ## Fail early and fail loud
-I have used require at all the places to stop a user from executing the function at very start if he don't have the required permissions or if something was failing
+I have used `require()` at all the places to stop a user from executing the function at very start if he don't have the required permissions or if something was failing
 ## Restricting Access
 Have used modifers like onlyOwner(), onlyAuthor(), onlyMaintainer() etc with require statements to restrict unauthorised access on the functions
 ## Circuit Breaker

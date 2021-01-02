@@ -18,11 +18,11 @@ The platform is a decentralized social media something similar to twitter but to
   - Once a dweet get a specified no of reports it will be sent to maintainers for action
   - You will have to stake some ethers for reporting
   - If the dweet is banned by maintainers you will get refund and a reward
-  - If the dweet is not Banned by maintainers you will get no refund and the staked amount will got to the reported dweet author
+  - If the dweet is not Banned by maintainers you will get no refund and the staked amount will go to the reported dweet author
 - Like feature on dweets
 - You can upload advertisements(image and a link) and reach out to platform users at nominal cost
   - Advertisements once submitted will be sent to maintainers for acceptance
-  -If it is rejected then it 80% amount will be refunded
+  -If it is rejected then 80% amount will be refunded
 - Maintainers can be added to the platform
 - A dedicated maintainer page where you can give acceptance and ban dweets(**only If it gets required reports**)
 
@@ -70,9 +70,9 @@ The platform is a decentralized social media something similar to twitter but to
 3. In the projects root directory, run `truffle console` to interact with the porject.
 4. To compile contracts run `truffle compile`
 5. To deploy run `truffle migrate` 
-6. To run test run `truffle test` 
+6. To test run `truffle test` 
 
-### Frontend
+### Frontend/To Start Local Server
 1. In the projects root directory, run `npm start`
 
 ## Project Demo
